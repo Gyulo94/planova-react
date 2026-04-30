@@ -1,10 +1,17 @@
-import { Button } from "./components/ui/button";
+import { Route, Routes } from "react-router-dom";
+import { LoginPage, MainPage, NotFoundPage, RegisterPage } from "./pages";
+import RegisterVerifyMailPage from "./pages/auth/register-verify-mail-page";
 
 function App() {
   return (
-    <>
-      <Button className="cursor-pointer">버튼</Button>
-    </>
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/register/:token" element={<RegisterVerifyMailPage />} />
+
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }
 
