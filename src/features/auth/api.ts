@@ -1,5 +1,9 @@
 import z from "zod/v3";
-import { LoginFormSchema, RegisterFormSchema } from "./schema";
+import {
+  LoginFormSchema,
+  RegisterFormSchema,
+  ResetPasswordFormSchema,
+} from "./schema";
 import api, { publicApi } from "@/lib/axios";
 import { SERVER_URL } from "@/lib/constants";
 
@@ -25,5 +29,27 @@ export async function logout() {
 export async function registerVerifyMail(token: string | undefined) {
   const values = { token, type: "register" };
   const response = await publicApi.post("/auth/verify-email", values);
+  return response.data;
+}
+
+export async function sendResetPasswordMail(email: string) {
+  const values = { email, type: "reset" };
+  const response = await publicApi.post("/auth/send-email", values);
+  return response.data;
+}
+
+export async function resetPasswordVerifyMail(token: string | undefined) {
+  const values = { token, type: "reset" };
+  const response = await publicApi.post("/auth/verify-email", values);
+  return response.data.body;
+}
+
+export async function resetPassword(
+  values: z.infer<typeof ResetPasswordFormSchema>,
+) {
+  const { confirmPassword, ...payload } = values;
+  console.log(payload);
+
+  const response = await publicApi.put("/auth/reset-password", payload);
   return response.data;
 }

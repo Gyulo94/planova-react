@@ -1,5 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login, logout, register, registerVerifyMail } from "./api";
+import {
+  login,
+  logout,
+  register,
+  registerVerifyMail,
+  resetPassword,
+  resetPasswordVerifyMail,
+  sendResetPasswordMail,
+} from "./api";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { getSession } from "@/features/user/api";
@@ -25,10 +33,52 @@ export function useRegister() {
 export function useRegisterVerifyMail() {
   const navigate = useNavigate();
   const mutation = useMutation({
-    mutationFn: (token: string | undefined) => registerVerifyMail(token),
+    mutationFn: registerVerifyMail,
     onSuccess: (data) => {
       toast.success(data.message);
-      navigate("/");
+
+      navigate("/login");
+    },
+  });
+  return mutation;
+}
+
+export function useResetPasswordVerifyMail() {
+  const mutation = useMutation({
+    mutationFn: resetPasswordVerifyMail,
+  });
+  return mutation;
+}
+
+export function useResetPassword() {
+  const navigate = useNavigate();
+  const mutation = useMutation({
+    mutationFn: resetPassword,
+    onSuccess: (data) => {
+      toast.success(data.message);
+      navigate("/login");
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    },
+  });
+  return mutation;
+}
+
+export function useSendResetPasswordMail() {
+  const navigate = useNavigate();
+  const mutation = useMutation({
+    mutationFn: sendResetPasswordMail,
+    onSuccess: (data) => {
+      toast.success(data.message);
+      navigate("/login");
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
     },
   });
   return mutation;

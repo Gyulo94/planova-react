@@ -12,6 +12,12 @@ export default function RegiserVerifyMailPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (session) {
+      navigate("/");
+    }
+  }, [session, navigate]);
+
+  useEffect(() => {
     if (token) {
       verify(token, {
         onError() {
@@ -21,15 +27,11 @@ export default function RegiserVerifyMailPage() {
     }
   }, [token, verify]);
 
+  console.log(isError);
+
   if (isError) {
     return <NotFoundPage />;
   }
-
-  useEffect(() => {
-    if (session) {
-      navigate("/");
-    }
-  }, [session, navigate]);
 
   return null;
 }
