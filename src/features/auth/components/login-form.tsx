@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LoginFormSchema } from "../schema";
 import { useLogin } from "../query";
+import SocialLogin from "./social-login";
 
 export default function LoginForm() {
   const { mutate: login } = useLogin();
@@ -99,8 +100,8 @@ export default function LoginForm() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              {/* <SocialLogin provider="kakao" />
-              <SocialLogin provider="google" /> */}
+              <SocialLogin provider="kakao" />
+              <SocialLogin provider="google" />
             </div>
             <div className="text-sm text-center text-muted-foreground">
               계정이 없나요?{" "}

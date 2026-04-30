@@ -1,6 +1,7 @@
 import z from "zod/v3";
 import { LoginFormSchema, RegisterFormSchema } from "./schema";
-import { publicApi } from "@/lib/axios";
+import api, { publicApi } from "@/lib/axios";
+import { SERVER_URL } from "@/lib/constants";
 
 export async function register(values: z.infer<typeof RegisterFormSchema>) {
   const { confirmPassword, ...payload } = values;
@@ -9,8 +10,12 @@ export async function register(values: z.infer<typeof RegisterFormSchema>) {
 }
 
 export async function login(values: z.infer<typeof LoginFormSchema>) {
-  const response = await publicApi.post("/auth/login", values);
+  const response = await api.post("/auth/login", values);
   return response.data;
+}
+
+export async function socialLogin(provider: string) {
+  window.location.href = `${SERVER_URL}/auth/${provider}`;
 }
 
 export async function registerVerifyMail(token: string | undefined) {
