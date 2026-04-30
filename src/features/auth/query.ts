@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { login, register, registerVerifyMail } from "./api";
+import { login, logout, register, registerVerifyMail } from "./api";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { getSession } from "@/features/user/api";
@@ -49,6 +49,20 @@ export function useLogin() {
       if (error instanceof Error) {
         toast.error(error.message);
       }
+    },
+  });
+  return mutation;
+}
+
+export function useLogout() {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      navigate("/login");
+      setCachedSession(null);
+      queryClient.setQueryData(["session"], null);
     },
   });
   return mutation;

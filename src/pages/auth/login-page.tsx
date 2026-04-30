@@ -1,10 +1,13 @@
 import { LoginForm } from "@/features/auth/components";
+import { useSession } from "@/features/user/query";
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function LoginPage() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { data: session } = useSession();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const error = searchParams.get("error");
@@ -15,6 +18,12 @@ export default function LoginPage() {
       }, 0);
     }
   }, []);
+
+  useEffect(() => {
+    if (session) {
+      navigate("/");
+    }
+  }, [session, navigate]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-6 md:px-10">

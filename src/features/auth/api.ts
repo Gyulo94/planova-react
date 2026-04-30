@@ -18,6 +18,10 @@ export async function socialLogin(provider: string) {
   window.location.href = `${SERVER_URL}/auth/${provider}`;
 }
 
+export async function logout() {
+  await api.post("/auth/logout");
+}
+
 export async function registerVerifyMail(token: string | undefined) {
   const values = { token, type: "register" };
   const response = await publicApi.post("/auth/verify-email", values);
