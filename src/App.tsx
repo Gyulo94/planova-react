@@ -14,6 +14,7 @@ import RegisterVerifyMailPage from "./pages/auth/register-verify-mail-page";
 import RootLayout from "./components/shared/layout/root-layout";
 import AuthRoute from "../routes/auth.route";
 import PrivateRoute from "../routes/private.route";
+import WorkspaceTeamPage from "./pages/workspace/workspace-team-page";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/reset-password" element={<EmailFormPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       </Route>
+
       <Route element={<PrivateRoute />}>
         <Route path="/workspaces/new" element={<WorkspacePage />} />
         <Route element={<RootLayout />}>
@@ -36,10 +38,15 @@ function App() {
             path="/workspaces/:workspaceId/projects/:projectId"
             element={<ProjectDashboardPage />}
           />
+          <Route
+            path="/workspaces/:workspaceId/team"
+            element={<WorkspaceTeamPage />}
+          />
         </Route>
 
         <Route path="/" element={<MainPage />} />
       </Route>
+
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

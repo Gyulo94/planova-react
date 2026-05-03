@@ -1,4 +1,5 @@
 import CreateProjectDialog from "@/features/project/components/create-project-dialog";
+import WorkspaceInviteCodeDialog from "@/features/workspace-member/components/workspace-invite-code-dialog";
 import CreateWorkspaceDialog from "@/features/workspace/components/create-workspace-dialog";
 
 export default function ModalProvider() {
@@ -6,6 +7,7 @@ export default function ModalProvider() {
     <>
       <CreateWorkspaceDialog />
       <CreateProjectDialog />
+      <WorkspaceInviteCodeDialog />
     </>
   );
 }

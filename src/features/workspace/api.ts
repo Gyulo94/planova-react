@@ -13,3 +13,8 @@ export async function findWorkspaces() {
   const response = await api.get("/workspace/all");
   return response.data.body;
 }
+
+export async function findWorkspaceById(workspaceId?: string) {
+  const response = await api.get(`/workspace/${workspaceId}`);
+  return response.data.body;
+}

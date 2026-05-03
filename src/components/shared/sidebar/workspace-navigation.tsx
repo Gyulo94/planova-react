@@ -4,14 +4,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  ClockIcon,
-  LayoutDashboardIcon,
-  SettingsIcon,
-  UsersIcon,
-} from "lucide-react";
+import { LayoutDashboardIcon, SettingsIcon, UsersIcon } from "lucide-react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { LuListTodo } from "react-icons/lu";
 
 const routes = [
   {
@@ -20,18 +14,8 @@ const routes = [
     icon: LayoutDashboardIcon,
   },
   {
-    label: "타임라인",
-    href: "timelines",
-    icon: ClockIcon,
-  },
-  {
-    label: "스프린트",
-    href: "sprints",
-    icon: LuListTodo,
-  },
-  {
     label: "팀",
-    href: "teams",
+    href: "team",
     icon: UsersIcon,
   },
   {

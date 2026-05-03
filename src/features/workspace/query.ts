@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createWorkspace, findWorkspaces } from "./api";
+import { createWorkspace, findWorkspaceById, findWorkspaces } from "./api";
 import { Workspace } from "./type";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +27,15 @@ export function useFindWorkspaces() {
   const query = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
     queryFn: findWorkspaces,
+  });
+  return query;
+}
+
+export function useFindWorkspaceById(workspaceId?: string) {
+  const query = useQuery({
+    queryKey: ["workspace", { workspaceId }],
+    queryFn: () => findWorkspaceById(workspaceId),
+    enabled: !!workspaceId,
   });
   return query;
 }
