@@ -1,23 +1,14 @@
 import { ResetPasswordForm } from "@/features/auth/components/reset-password-form";
 import { useResetPasswordVerifyMail } from "@/features/auth/query";
-import { useSession } from "@/features/user/query";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NotFoundPage from "../not-found";
 
 export default function ResetPasswordPage() {
-  const { data: session } = useSession();
   const { token } = useParams();
-  const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
   const { mutate: verify } = useResetPasswordVerifyMail();
   const [email, setEmail] = useState("");
-
-  useEffect(() => {
-    if (session) {
-      navigate("/");
-    }
-  }, [session, navigate]);
 
   useEffect(() => {
     if (token) {

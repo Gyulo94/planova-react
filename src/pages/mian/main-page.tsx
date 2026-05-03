@@ -1,20 +1,21 @@
-import { Button } from "@/components/ui/button";
 import { useSocialCallback } from "@/features/auth/hooks/use-social-callback";
-import { useLogout } from "@/features/auth/query";
-import { useSession } from "@/features/user/query";
+import { useFindWorkspaces } from "@/features/workspace/query";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function MainPage() {
-  const { data: session } = useSession();
-  const { mutate: logout } = useLogout();
-  useSocialCallback();
-  console.log(session);
+  const { data: workspace } = useFindWorkspaces();
+  const navigate = useNavigate();
 
-  return (
-    <>
-      <div>
-        MainPage{session ? `Welcome, ${session.name}` : "Welcome, Guest"}
-      </div>
-      <Button onClick={() => logout()}>로그아웃</Button>
-    </>
-  );
+  useSocialCallback();
+
+  useEffect(() => {
+    if (workspace && workspace.length > 0) {
+      navigate(`/workspaces/${workspace[0].id}`);
+    } else {
+      navigate("/workspaces/new");
+    }
+  }, [workspace, navigate]);
+
+  return null;
 }
