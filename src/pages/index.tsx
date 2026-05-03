@@ -5,3 +5,5 @@ export { default as NotFoundPage } from "./not-found";
 export { default as RegiserVerifyMailPage } from "./auth/register-verify-mail-page";
 export { default as EmailFormPage } from "./auth/email-form-page";
 export { default as ResetPasswordPage } from "./auth/reset-password-page";
+export { default as WorkspaceDashboardPage } from "./workspace/workspace-dashboard-page";
+export { default as WorkspacePage } from "./workspace/workspace-page";
