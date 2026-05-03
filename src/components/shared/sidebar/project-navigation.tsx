@@ -4,6 +4,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useSelectedProject } from "@/features/project/hook";
 import {
   ClockIcon,
   LayoutDashboardIcon,
@@ -11,7 +12,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { LuListTodo } from "react-icons/lu";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const routes = [
   {
@@ -42,8 +43,12 @@ const routes = [
 ];
 
 export default function ProjectNavigation() {
-  const { workspaceId, projectId } = useParams();
+  const { workspaceId, selectedProjectId } = useSelectedProject();
   const { pathname } = useLocation();
+
+  if (!workspaceId || !selectedProjectId) {
+    return null;
+  }
 
   return (
     <SidebarGroup>
@@ -51,8 +56,8 @@ export default function ProjectNavigation() {
         {routes.map((r) => {
           const href =
             r.href === ""
-              ? `/workspaces/${workspaceId}/projects/${projectId}`
-              : `/workspaces/${workspaceId}/projects/${projectId}/${r.href}`;
+              ? `/workspaces/${workspaceId}/projects/${selectedProjectId}`
+              : `/workspaces/${workspaceId}/projects/${selectedProjectId}/${r.href}`;
           const isActive = pathname === href;
           return (
             <SidebarMenuItem

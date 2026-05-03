@@ -4,6 +4,7 @@ import {
   LoginPage,
   MainPage,
   NotFoundPage,
+  ProjectDashboardPage,
   RegisterPage,
   ResetPasswordPage,
   WorkspaceDashboardPage,
@@ -11,8 +12,8 @@ import {
 } from "./pages";
 import RegisterVerifyMailPage from "./pages/auth/register-verify-mail-page";
 import RootLayout from "./components/shared/layout/root-layout";
-import AuthRoute from "./components/routes/auth.route";
-import PrivateRoute from "./components/routes/private.route";
+import AuthRoute from "../routes/auth.route";
+import PrivateRoute from "../routes/private.route";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
           <Route
             path="/workspaces/:workspaceId"
             element={<WorkspaceDashboardPage />}
+          />
+          <Route
+            path="/workspaces/:workspaceId/projects/:projectId"
+            element={<ProjectDashboardPage />}
           />
         </Route>
 

@@ -2,14 +2,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createWorkspace, findWorkspaces } from "./api";
 import { Workspace } from "./type";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 export function useCreateWorkspace() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: createWorkspace,
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
+      navigate(`/workspaces/${data.body.id}`);
     },
     onError: (error) => {
       if (error instanceof Error) {
