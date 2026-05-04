@@ -14,6 +14,9 @@ export function useFindWorkspaceMembers(workspaceId?: string) {
     enabled: !!workspaceId,
     queryKey: ["workspace-member", { workspaceId }],
     queryFn: () => findWorkspaceMembers(workspaceId),
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
   return query;
 }

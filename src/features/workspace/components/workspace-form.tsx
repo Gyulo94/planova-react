@@ -27,6 +27,7 @@ interface WorkspaceFormProps {
   onSubmit: (data: z.infer<typeof WorkspaceFormSchema>) => void;
   defaultValues: z.infer<typeof WorkspaceFormSchema>;
   onClose?: () => void;
+  isLoading?: boolean;
 }
 
 export default function WorkspaceForm({
@@ -35,6 +36,7 @@ export default function WorkspaceForm({
   onSubmit,
   defaultValues,
   onClose,
+  isLoading = false,
 }: WorkspaceFormProps) {
   const form = useForm<z.infer<typeof WorkspaceFormSchema>>({
     resolver: zodResolver(WorkspaceFormSchema),
@@ -112,8 +114,8 @@ export default function WorkspaceForm({
                         )}
                       </>
                     ) : (
-                      <Avatar className="size-[72px] hover:bg-gray-50 transition-colors">
-                        <AvatarFallback>
+                      <Avatar className="rounded-md! size-[72px] hover:bg-gray-50 transition-colors">
+                        <AvatarFallback className="rounded-md">
                           {uploading ? (
                             <Loader className="border-neutral-400 border-t-transparent" />
                           ) : (

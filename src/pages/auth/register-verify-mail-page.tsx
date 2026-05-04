@@ -18,8 +18,6 @@ export default function RegiserVerifyMailPage() {
     }
   }, [token, verify]);
 
-  console.log(isError);
-
   if (isError) {
     return <NotFoundPage />;
   }

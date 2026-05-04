@@ -10,12 +10,28 @@ import { toast } from "sonner";
 import { useOpenWorkspaceInviteCodeDialogStore } from "../store";
 import { useFindWorkspaceById } from "@/features/workspace/query";
 import { CLINENT_URL } from "@/lib/constants";
+import { useEffect, useState } from "react";
 
 export default function WorkspaceInviteCodeDialog() {
   const { isOpen, onClose, workspaceId } =
     useOpenWorkspaceInviteCodeDialogStore();
+  const [fullInviteLink, setFullInviteLink] = useState("");
 
   const { data: workspace } = useFindWorkspaceById(workspaceId);
+
+  useEffect(() => {
+    if (workspace?.inviteCode) {
+      setFullInviteLink(
+        `${window.location.origin}/workspaces/${workspaceId}/join/${workspace.inviteCode}`,
+      );
+    }
+  }, [workspaceId, workspace?.inviteCode]);
+
+  function handleCopyInviteLink() {
+    navigator.clipboard
+      .writeText(fullInviteLink)
+      .then(() => toast.success("초대 링크가 복사되었습니다."));
+  }
 
   const inviteLink = `${CLINENT_URL}/workspaces/${workspace?.id}/join/${workspace?.inviteCode}`;
 
@@ -39,14 +55,7 @@ export default function WorkspaceInviteCodeDialog() {
               className="flex-1"
             />
             {workspace?.inviteCode && (
-              <Button
-                onClick={() => {
-                  navigator.clipboard.writeText(inviteLink);
-                  toast.success("초대 코드가 클립보드에 복사되었습니다.");
-                }}
-              >
-                복사
-              </Button>
+              <Button onClick={handleCopyInviteLink}>복사</Button>
             )}
           </div>
         </div>

@@ -2,10 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useFindWorkspaceById } from "@/features/workspace/query";
-import { useNavigate } from "react-router-dom";
 
-import { toast } from "sonner";
 import { useJoinWorkspace } from "../query";
+import { useEffect, useState } from "react";
+import { NotFoundPage } from "@/pages";
 
 interface JoinWorkspaceFormProps {
   workspaceId?: string;
@@ -16,18 +16,24 @@ export default function JoinWorkspaceForm({
   workspaceId,
   inviteCode,
 }: JoinWorkspaceFormProps) {
-  const { data: workspace } = useFindWorkspaceById(workspaceId);
+  const { data: workspace, isLoading } = useFindWorkspaceById(workspaceId);
   const { mutate: joinWorkspace } = useJoinWorkspace(workspaceId);
-  const navigate = useNavigate();
+  const [isInvalidInvite, setIsInvalidInvite] = useState(false);
+
+  useEffect(() => {
+    if (isLoading || !workspace || !inviteCode) return;
+
+    if (workspace.inviteCode !== inviteCode) {
+      setIsInvalidInvite(true);
+    }
+  }, [isLoading, workspace, inviteCode]);
+
+  if (isInvalidInvite) {
+    return <NotFoundPage />;
+  }
 
   function handleJoinWorkspace(inviteCode: string) {
-    if (!inviteCode || workspace?.inviteCode !== inviteCode) {
-      toast.error("유효하지 않은 초대 코드입니다.");
-      navigate("/");
-      return;
-    } else {
-      joinWorkspace(inviteCode);
-    }
+    joinWorkspace(inviteCode);
   }
   return (
     <Card className="size-full max-w-lg border-none shadow-none">

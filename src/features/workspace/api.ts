@@ -18,3 +18,21 @@ export async function findWorkspaceById(workspaceId?: string) {
   const response = await api.get(`/workspace/${workspaceId}`);
   return response.data.body;
 }
+
+export async function updateWorkspace(
+  workspaceId?: string,
+  values?: z.infer<typeof WorkspaceFormSchema>,
+) {
+  const response = await api.put(`/workspace/${workspaceId}/update`, values);
+  return response.data;
+}
+
+export async function deleteWorkspace(workspaceId?: string) {
+  const response = await api.delete(`/workspace/${workspaceId}/delete`);
+  return response.data;
+}
+
+export async function resetInviteCode(workspaceId?: string) {
+  const response = await api.put(`/workspace/${workspaceId}/invite-code/reset`);
+  return response.data;
+}
