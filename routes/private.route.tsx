@@ -1,18 +1,16 @@
 import { useSession } from "@/features/user/query";
-import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 export default function PrivateRoute() {
-  const { data: session } = useSession();
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (!session) {
-      navigate("/login");
-    }
-  }, [session, navigate]);
-  return (
-    <>
-      <Outlet />
-    </>
-  );
+  const { data: session, isLoading } = useSession();
+
+  if (isLoading) {
+    return null;
+  }
+
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 }
