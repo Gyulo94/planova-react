@@ -18,8 +18,6 @@ export default function WorkspaceSwitcher() {
   const { data } = useFindWorkspaces();
   const workspaces = data || [];
 
-  console.log(data);
-
   function onSelect(workspaceId: string) {
     navigate(`/workspaces/${workspaceId}`);
   }

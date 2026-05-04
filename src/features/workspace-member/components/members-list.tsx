@@ -2,7 +2,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useSession } from "@/features/user/query";
 
 import { useConfirm } from "@/hooks/use-confirm";
-import { useFindWorkspaceMembers } from "../query";
+import {
+  useFindWorkspaceMembers,
+  useRemoveWorkspaceMember,
+  useUpdateWorkspaceMember,
+} from "../query";
 import { Fragment } from "react/jsx-runtime";
 import CircleAvatar from "@/components/ui/circle-avatar";
 import { DEFAULT_AVATAR } from "@/lib/constants";
@@ -25,6 +29,8 @@ interface MembersListProps {
 export default function MembersList({ workspaceId }: MembersListProps) {
   const { data: session } = useSession();
   const { data: workspaceMembers } = useFindWorkspaceMembers(workspaceId);
+  const { mutate: updateMember } = useUpdateWorkspaceMember(workspaceId);
+  const { mutate: removeMember } = useRemoveWorkspaceMember(workspaceId);
   const { onOpen } = useOpenWorkspaceInviteCodeDialogStore();
 
   const [ConfirmDialog, confirm] = useConfirm(
@@ -34,6 +40,17 @@ export default function MembersList({ workspaceId }: MembersListProps) {
 
   function handleInviteMember() {
     onOpen(workspaceId!);
+  }
+
+  function handleUpdateMember(userId: string): void {
+    updateMember(userId);
+  }
+
+  async function handleRemoveMember(userId: string): Promise<void> {
+    const ok = await confirm();
+    if (ok) {
+      removeMember(userId);
+    }
   }
 
   return (
@@ -92,7 +109,7 @@ export default function MembersList({ workspaceId }: MembersListProps) {
                     <DropdownMenuContent side="bottom" align="end">
                       <DropdownMenuItem
                         className="font-medium"
-                        onClick={() => {}}
+                        onClick={() => handleUpdateMember(member.userId)}
                         disabled={false}
                       >
                         {member.role === "MEMBER"
@@ -102,7 +119,7 @@ export default function MembersList({ workspaceId }: MembersListProps) {
 
                       <DropdownMenuItem
                         className="font-medium text-destructive"
-                        onClick={() => {}}
+                        onClick={() => handleRemoveMember(member.userId)}
                         disabled={false}
                       >
                         멤버 추방
