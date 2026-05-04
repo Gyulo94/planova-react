@@ -2,11 +2,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useSession } from "@/features/user/query";
 
 import { useConfirm } from "@/hooks/use-confirm";
-import {
-  useFindWorkspaceMembers,
-  useRemoveWorkspaceMember,
-  useUpdateWorkspaceMember,
-} from "../query";
 import { Fragment } from "react/jsx-runtime";
 import CircleAvatar from "@/components/ui/circle-avatar";
 import { DEFAULT_AVATAR } from "@/lib/constants";
@@ -20,26 +15,33 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreVerticalIcon, PlusIcon } from "lucide-react";
-import { useOpenWorkspaceInviteCodeDialogStore } from "../store";
+import {
+  useFindProjectMembers,
+  useRemoveProjectMember,
+  useUpdateProjectMember,
+} from "../query";
+import { useOpenInviteProjectMemberDialogStore } from "../store";
 
-interface MembersListProps {
-  workspaceId?: string;
+interface ProjectMembersListProps {
+  projectId?: string;
 }
 
-export default function MembersList({ workspaceId }: MembersListProps) {
+export default function ProjectMembersList({
+  projectId,
+}: ProjectMembersListProps) {
   const { data: session } = useSession();
-  const { data: workspaceMembers } = useFindWorkspaceMembers(workspaceId);
-  const { mutate: updateMember } = useUpdateWorkspaceMember(workspaceId);
-  const { mutate: removeMember } = useRemoveWorkspaceMember(workspaceId);
-  const { onOpen } = useOpenWorkspaceInviteCodeDialogStore();
+  const { data: projectMembers } = useFindProjectMembers(projectId);
+  const { mutate: updateMember } = useUpdateProjectMember(projectId);
+  const { mutate: removeMember } = useRemoveProjectMember(projectId);
+  const { onOpen } = useOpenInviteProjectMemberDialogStore();
 
   const [ConfirmDialog, confirm] = useConfirm(
     "정말로 멤버를 추방하시겠습니까?",
-    "추방된 멤버는 워크스페이스에 다시 접근할 수 없습니다.",
+    "추방된 멤버는 프로젝트에 다시 접근할 수 없습니다.",
   );
 
   function handleInviteMember() {
-    onOpen(workspaceId!);
+    onOpen(projectId);
   }
 
   function handleUpdateMember(userId: string): void {
@@ -59,8 +61,8 @@ export default function MembersList({ workspaceId }: MembersListProps) {
       <Card className="size-full border-none shadow-none">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">워크스페이스 멤버</h2>
-            {workspaceMembers?.find((m) => m.userId === session?.id)?.role !==
+            <h2 className="text-lg font-semibold">프로젝트 멤버</h2>
+            {projectMembers?.find((m) => m.userId === session?.id)?.role !==
               "MEMBER" && (
               <Button onClick={handleInviteMember}>
                 <PlusIcon />새 멤버 추가
@@ -69,7 +71,7 @@ export default function MembersList({ workspaceId }: MembersListProps) {
           </div>
         </CardHeader>
         <CardContent>
-          {workspaceMembers?.map((member, index) => (
+          {projectMembers?.map((member, index) => (
             <Fragment key={member.id}>
               <div className="flex items-center gap-2">
                 <CircleAvatar
@@ -132,7 +134,7 @@ export default function MembersList({ workspaceId }: MembersListProps) {
                   )
                 )}
               </div>
-              {index < workspaceMembers.length - 1 && (
+              {index < projectMembers.length - 1 && (
                 <Separator className="my-2.5" />
               )}
             </Fragment>

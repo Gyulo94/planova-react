@@ -25,9 +25,9 @@ export default function WorkspaceSwitcher() {
   return (
     <div className="flex flex-col gap-y-2 px-2">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-neutral-500">워크스페이스</p>
+        <p className="text-xs text-muted-foreground">워크스페이스</p>
         <RiAddCircleFill
-          className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition"
+          className="size-5 text-primary cursor-pointer hover:opacity-75 transition"
           onClick={onOpen}
         />
       </div>

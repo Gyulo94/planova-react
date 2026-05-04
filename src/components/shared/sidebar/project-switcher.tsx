@@ -9,14 +9,22 @@ import SquareAvatar from "@/components/ui/square-avatar";
 import { useSelectedProject } from "@/features/project/hook";
 import { useFindProjects } from "@/features/project/query";
 import { useOpenProjectDialogStore } from "@/features/project/store";
+import { useSession } from "@/features/user/query";
+import { useFindWorkspaceMembers } from "@/features/workspace-member/query";
 import { RiAddCircleFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
 export default function ProjectSwitcher() {
+  const { data: session } = useSession();
   const { workspaceId, selectedProjectId } = useSelectedProject();
   const { onOpen } = useOpenProjectDialogStore();
-  const { data: projects } = useFindProjects(workspaceId);
+  const { data: projects } = useFindProjects(workspaceId, session?.id);
+  const { data: workspaceMembers } = useFindWorkspaceMembers(workspaceId);
   const navigate = useNavigate();
+
+  const myRole = workspaceMembers?.find(
+    (member) => member.userId === session?.id,
+  )?.role;
 
   function onSelect(projectId: string) {
     if (!workspaceId) return;
@@ -26,11 +34,13 @@ export default function ProjectSwitcher() {
   return (
     <div className="flex flex-col gap-y-2 px-2">
       <div className="flex items-center justify-between">
-        <p className="text-xs text-neutral-500">프로젝트</p>
-        <RiAddCircleFill
-          className="size-5 text-neutral-500 cursor-pointer hover:opacity-75 transition"
-          onClick={() => onOpen(workspaceId)}
-        />
+        <p className="text-xs text-muted-foreground">프로젝트</p>
+        {myRole === "OWNER" && (
+          <RiAddCircleFill
+            className="size-5 text-primary cursor-pointer hover:opacity-75 transition"
+            onClick={() => onOpen(workspaceId)}
+          />
+        )}
       </div>
       <Select onValueChange={onSelect} value={selectedProjectId}>
         <SelectTrigger

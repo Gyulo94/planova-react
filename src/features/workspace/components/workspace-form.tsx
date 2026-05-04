@@ -27,7 +27,6 @@ interface WorkspaceFormProps {
   onSubmit: (data: z.infer<typeof WorkspaceFormSchema>) => void;
   defaultValues: z.infer<typeof WorkspaceFormSchema>;
   onClose?: () => void;
-  isLoading?: boolean;
 }
 
 export default function WorkspaceForm({
@@ -36,7 +35,6 @@ export default function WorkspaceForm({
   onSubmit,
   defaultValues,
   onClose,
-  isLoading = false,
 }: WorkspaceFormProps) {
   const form = useForm<z.infer<typeof WorkspaceFormSchema>>({
     resolver: zodResolver(WorkspaceFormSchema),
@@ -151,15 +149,17 @@ export default function WorkspaceForm({
         <Separator className="my-8" />
 
         <div className="flex justify-end gap-3">
-          <Button
-            type="button"
-            variant="secondary"
-            size="md"
-            onClick={onClose}
-            disabled={isDisabled}
-          >
-            취소
-          </Button>
+          {!id ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="md"
+              onClick={onClose}
+              disabled={isDisabled}
+            >
+              취소
+            </Button>
+          ) : null}
           <Button type="submit" size="md" disabled={isDisabled || uploading}>
             {id ? "수정하기" : "생성하기"}
           </Button>

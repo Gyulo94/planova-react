@@ -1,26 +1,10 @@
 import Navbar from "@/components/navbar";
 import AppSidebar from "@/components/shared/sidebar/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { useFindWorkspaceMembers } from "@/features/workspace-member/query";
-import { NotFoundPage } from "@/pages";
 import { Outlet, useParams } from "react-router-dom";
 
 export default function RootLayout() {
   const { workspaceId } = useParams();
-  const { isError, isLoading } = useFindWorkspaceMembers(workspaceId);
-
-  if (!workspaceId) {
-    return <NotFoundPage />;
-  }
-
-  if (isLoading) {
-    return null;
-  }
-
-  if (isError) {
-    return <NotFoundPage />;
-  }
-
   return (
     <SidebarProvider>
       <div className="w-full flex h-screen bg-accent">

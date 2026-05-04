@@ -27,6 +27,7 @@ interface ProjectFormProps {
   onSubmit: (data: z.infer<typeof ProjectFormSchema>) => void;
   defaultValues: z.infer<typeof ProjectFormSchema>;
   onClose?: () => void;
+  isLoading?: boolean;
 }
 
 export default function ProjectForm({
@@ -35,6 +36,7 @@ export default function ProjectForm({
   onSubmit,
   defaultValues,
   onClose,
+  isLoading = false,
 }: ProjectFormProps) {
   const form = useForm<z.infer<typeof ProjectFormSchema>>({
     resolver: zodResolver(ProjectFormSchema),
@@ -149,16 +151,22 @@ export default function ProjectForm({
         <Separator className="my-8" />
 
         <div className="flex justify-end gap-3">
+          {!id ? (
+            <Button
+              type="button"
+              variant="secondary"
+              size="md"
+              onClick={onClose}
+              disabled={isDisabled || isLoading}
+            >
+              취소
+            </Button>
+          ) : null}
           <Button
-            type="button"
-            variant="secondary"
+            type="submit"
             size="md"
-            onClick={onClose}
-            disabled={isDisabled}
+            disabled={isDisabled || uploading || isLoading}
           >
-            취소
-          </Button>
-          <Button type="submit" size="md" disabled={isDisabled || uploading}>
             {id ? "수정하기" : "생성하기"}
           </Button>
         </div>

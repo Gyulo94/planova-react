@@ -9,3 +9,8 @@ export { default as WorkspaceDashboardPage } from "./workspace/workspace-dashboa
 export { default as WorkspacePage } from "./workspace/workspace-page";
 export { default as ProjectDashboardPage } from "./project/project-dashboard-page";
 export { default as JoinWorkspacePage } from "./workspace/join-workspace-page";
+export { default as RegisterVerifyMailPage } from "./auth/register-verify-mail-page";
+
+export { default as WorkspaceTeamPage } from "./workspace/workspace-team-page";
+export { default as WorkspaceSettingPage } from "./workspace/workspace-setting-page";
+export { default as ProjectTeamPage } from "./project/project-team-page";

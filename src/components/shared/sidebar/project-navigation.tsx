@@ -32,7 +32,7 @@ const routes = [
   },
   {
     label: "팀",
-    href: "teams",
+    href: "team",
     icon: UsersIcon,
   },
   {

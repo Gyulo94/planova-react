@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import {
   EmailFormPage,
+  JoinWorkspacePage,
   LoginPage,
   MainPage,
   NotFoundPage,
@@ -9,12 +10,20 @@ import {
   ResetPasswordPage,
   WorkspaceDashboardPage,
   WorkspacePage,
+  RegisterVerifyMailPage,
+  WorkspaceTeamPage,
+  WorkspaceSettingPage,
+  ProjectTeamPage,
 } from "./pages";
-import RegisterVerifyMailPage from "./pages/auth/register-verify-mail-page";
+import {
+  AuthRoute,
+  PrivateRoute,
+  ProjectRoute,
+  WorkspaceOwnerRoute,
+  WorkspaceRoute,
+} from "./routes";
 import RootLayout from "./components/shared/layout/root-layout";
-import AuthRoute from "../routes/auth.route";
-import PrivateRoute from "../routes/private.route";
-import WorkspaceTeamPage from "./pages/workspace/workspace-team-page";
+import ProjectSettingPage from "./pages/project/project-setting-page";
 
 function App() {
   return (
@@ -27,25 +36,54 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       </Route>
 
+      {/* 인증된 유저만 접근 가능한 라우트 설정 */}
       <Route element={<PrivateRoute />}>
         <Route path="/workspaces/new" element={<WorkspacePage />} />
         <Route element={<RootLayout />}>
-          <Route
-            path="/workspaces/:workspaceId"
-            element={<WorkspaceDashboardPage />}
-          />
-          <Route
-            path="/workspaces/:workspaceId/projects/:projectId"
-            element={<ProjectDashboardPage />}
-          />
-          <Route
-            path="/workspaces/:workspaceId/team"
-            element={<WorkspaceTeamPage />}
-          />
+          {/* 워크스페이스 권한이 있는 유저만 접근 가능하도록 라우트 설정 */}
+          <Route element={<WorkspaceRoute />}>
+            <Route
+              path="/workspaces/:workspaceId"
+              element={<WorkspaceDashboardPage />}
+            />
+            <Route
+              path="/workspaces/:workspaceId/team"
+              element={<WorkspaceTeamPage />}
+            />
+
+            {/* 워크스페이스 소유자만 접근 가능하도록 라우트 설정 */}
+            <Route element={<WorkspaceOwnerRoute />}>
+              <Route
+                path="/workspaces/:workspaceId/settings"
+                element={<WorkspaceSettingPage />}
+              />
+              <Route
+                path="/workspaces/:workspaceId/projects/:projectId/settings"
+                element={<ProjectSettingPage />}
+              />
+            </Route>
+
+            {/* 프로젝트 권한이 있는 유저만 접근 가능하도록 라우트 설정 */}
+            <Route element={<ProjectRoute />}>
+              <Route
+                path="/workspaces/:workspaceId/projects/:projectId"
+                element={<ProjectDashboardPage />}
+              />
+              <Route
+                path="/workspaces/:workspaceId/projects/:projectId/team"
+                element={<ProjectTeamPage />}
+              />
+            </Route>
+          </Route>
         </Route>
 
         <Route path="/" element={<MainPage />} />
       </Route>
+
+      <Route
+        path="/workspaces/:workspaceId/join/:inviteCode"
+        element={<JoinWorkspacePage />}
+      />
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

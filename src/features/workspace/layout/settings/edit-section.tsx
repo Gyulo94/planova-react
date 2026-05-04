@@ -65,7 +65,6 @@ export default function EditSection({ workspaceId }: EditSectionProps) {
           isDisabled={isDisabled}
           onSubmit={onSubmit}
           defaultValues={defaultValues}
-          isLoading={isLoading}
         />
       </CardContent>
     </Card>
