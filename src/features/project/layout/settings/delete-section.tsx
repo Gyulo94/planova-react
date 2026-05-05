@@ -6,10 +6,14 @@ import { useDeleteProject } from "../../query";
 
 interface DeleteSectionProps {
   projectId?: string;
+  workspaceId?: string;
 }
 
-export default function DeleteSection({ projectId }: DeleteSectionProps) {
-  const { mutate: deleteProject, isPending } = useDeleteProject();
+export default function DeleteSection({
+  projectId,
+  workspaceId,
+}: DeleteSectionProps) {
+  const { mutate: deleteProject, isPending } = useDeleteProject(workspaceId);
   const [ConfirmDialog, confirm] = useConfirm(
     "정말로 프로젝트를 삭제하시겠습니까?",
     "삭제된 프로젝트 데이터는 복구할 수 없습니다.",

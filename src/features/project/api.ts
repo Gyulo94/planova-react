@@ -37,3 +37,8 @@ export async function deleteProject(projectId?: string) {
   const response = await api.delete(`/project/${projectId}/delete`);
   return response.data;
 }
+
+export async function findLabelsByProjectId(projectId?: string) {
+  const response = await api.get(`/project/${projectId}/labels`);
+  return response.data.body;
+}

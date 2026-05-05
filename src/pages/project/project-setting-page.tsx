@@ -3,11 +3,11 @@ import EditSection from "@/features/project/layout/settings/edit-section";
 import { useParams } from "react-router-dom";
 
 export default function ProjectSettingPage() {
-  const { projectId } = useParams();
+  const { projectId, workspaceId } = useParams();
   return (
     <div className="max-w-5xl mx-auto flex flex-col gap-4 px-4">
       <EditSection projectId={projectId} />
-      <DeleteSection projectId={projectId} />
+      <DeleteSection projectId={projectId} workspaceId={workspaceId} />
     </div>
   );
 }

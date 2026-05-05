@@ -9,9 +9,11 @@ import {
   findProjectById,
   findProjects,
   updateProject,
+  findLabelsByProjectId,
 } from "./api";
 import { Project } from "./type";
 import { useNavigate } from "react-router-dom";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 export function useCreateProject(workspaceId?: string) {
   const queryClient = useQueryClient();
@@ -54,7 +56,6 @@ export function useFindProjectById(projectId?: string) {
 
 export function useUpdateProject(projectId?: string) {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: (values: z.infer<typeof ProjectFormSchema>) =>
       updateProject(projectId, values),
@@ -64,7 +65,6 @@ export function useUpdateProject(projectId?: string) {
       queryClient.invalidateQueries({
         queryKey: ["project", { projectId }],
       });
-      navigate(`/workspaces/${data.body.workspaceId}`);
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -75,13 +75,20 @@ export function useUpdateProject(projectId?: string) {
   return mutation;
 }
 
-export function useDeleteProject() {
+export function useDeleteProject(workspaceId?: string) {
   const queryClient = useQueryClient();
+  const { removeValue } = useLocalStorage(
+    `selected-project:${workspaceId}`,
+    null,
+  );
+  const navigate = useNavigate();
   const mutation = useMutation({
     mutationFn: (projectId?: string) => deleteProject(projectId),
     onSuccess: (data) => {
       toast.success(data.message);
+      removeValue();
       queryClient.invalidateQueries({ queryKey: ["projects"] });
+      navigate(`/`);
     },
     onError: (error) => {
       if (error instanceof Error) {
@@ -90,4 +97,13 @@ export function useDeleteProject() {
     },
   });
   return mutation;
+}
+
+export function useFindLabelsByProjectId(projectId?: string) {
+  const query = useQuery({
+    queryKey: ["projectLabels", { projectId }],
+    queryFn: () => findLabelsByProjectId(projectId),
+    enabled: !!projectId,
+  });
+  return query;
 }
