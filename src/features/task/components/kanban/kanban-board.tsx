@@ -15,7 +15,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Task, TaskStatusType } from "../../type";
 import KanbanColumnHeader from "./kanban-column-header";
 import { SortableTask } from "./sortable-task";
@@ -71,15 +71,11 @@ export default function KanbanBoard({ data = [], onChange }: Props) {
   const { workspaceId, projectId } = useParams();
   const { onOpen } = useOpenTaskDialogStore();
   const groupedTasks = useMemo(() => buildTasksByStatus(data), [data]);
-  const [tasks, setTasks] = useState<KanbanTaskGroups>(groupedTasks);
+  const [dragTasks, setDragTasks] = useState<KanbanTaskGroups | null>(null);
   const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
-  const tasksRef = useRef(groupedTasks);
+  const dragTasksRef = useRef<KanbanTaskGroups | null>(null);
 
-  useEffect(() => {
-    tasksRef.current = groupedTasks;
-    setTasks(groupedTasks);
-  }, [groupedTasks]);
-
+  const tasks = dragTasks ?? groupedTasks;
   const activeTask = useMemo(
     () => data.find((task) => task.id === activeTaskId) ?? null,
     [activeTaskId, data],
@@ -89,9 +85,14 @@ export default function KanbanBoard({ data = [], onChange }: Props) {
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   );
 
-  const onDragStart = useCallback((event: DragStartEvent) => {
-    setActiveTaskId(String(event.active.id));
-  }, []);
+  const onDragStart = useCallback(
+    (event: DragStartEvent) => {
+      setActiveTaskId(String(event.active.id));
+      setDragTasks(groupedTasks);
+      dragTasksRef.current = groupedTasks;
+    },
+    [groupedTasks],
+  );
 
   const onDragOver = useCallback((event: DragOverEvent) => {
     const { active, over } = event;
@@ -107,7 +108,9 @@ export default function KanbanBoard({ data = [], onChange }: Props) {
       return;
     }
 
-    setTasks((current) => {
+    setDragTasks((current) => {
+      if (!current) return current;
+
       const sourceStatus = findTaskStatus(current, activeId);
 
       if (!sourceStatus) {
@@ -142,12 +145,12 @@ export default function KanbanBoard({ data = [], onChange }: Props) {
           ),
         };
 
-        tasksRef.current = nextTasks;
+        dragTasksRef.current = nextTasks;
         return nextTasks;
       }
 
       const nextTasks = moveTask(current, activeId, overId);
-      tasksRef.current = nextTasks;
+      dragTasksRef.current = nextTasks;
       return nextTasks;
     });
   }, []);
@@ -157,10 +160,17 @@ export default function KanbanBoard({ data = [], onChange }: Props) {
       const { over } = event;
       setActiveTaskId(null);
 
-      if (!over) return;
+      if (!over) {
+        setDragTasks(null);
+        dragTasksRef.current = null;
+        return;
+      }
 
-      const finalTasks = tasksRef.current;
+      const finalTasks = dragTasksRef.current ?? groupedTasks;
       const payload = buildPayload(finalTasks, groupedTasks);
+
+      setDragTasks(null);
+      dragTasksRef.current = null;
 
       if (payload.length === 0) {
         return;
@@ -173,9 +183,9 @@ export default function KanbanBoard({ data = [], onChange }: Props) {
 
   const onDragCancel = useCallback(() => {
     setActiveTaskId(null);
-    tasksRef.current = groupedTasks;
-    setTasks(groupedTasks);
-  }, [groupedTasks]);
+    setDragTasks(null);
+    dragTasksRef.current = null;
+  }, []);
 
   return (
     <div className="flex-1 w-full bg-background">

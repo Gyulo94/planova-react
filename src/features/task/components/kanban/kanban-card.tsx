@@ -38,8 +38,11 @@ export default function KanbanCard({
 
   return (
     <div className="group bg-card border border-border rounded-xl p-3.5 shadow-sm hover:shadow-md transition-all duration-200 cursor-grab active:cursor-grabbing">
-      <div className="mb-3 flex items-start gap-2">
-        <p className="min-w-0 flex-1 text-sm font-medium leading-snug line-clamp-2 text-foreground">
+      <div className="mb-3 flex items-center gap-2">
+        <Badge variant="secondary" className="shrink-0 mt-0.5 text-center">
+          # {task.taskNumber}
+        </Badge>
+        <p className="min-w-0 flex-1 text-sm font-medium leading-snug line-clamp-1 text-foreground">
           {task.title}
         </p>
         <DropdownMenu>
@@ -98,7 +101,7 @@ export default function KanbanCard({
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex min-w-0 flex-1 flex-wrap gap-1.5 pr-3">
+        <div className="flex items-center min-w-0 flex-1 flex-wrap gap-1.5 pr-3">
           {labels.length > 0 ? (
             labels.map((taskLabel, index) => (
               <Badge

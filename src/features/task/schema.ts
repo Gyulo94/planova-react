@@ -1,7 +1,7 @@
 import z from "zod/v3";
 
 export const StatusTypes = z.enum(["TODO", "IN_PROGRESS", "REVIEW", "DONE"]);
-export const PriorityTypes = z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]);
+export const PriorityTypes = z.enum(["LOW", "MEDIUM", "HIGH", "URGENT"]);
 
 export const TaskFormSchema = z.object({
   title: z.string().min(1, "작업 제목을 입력해주세요."),

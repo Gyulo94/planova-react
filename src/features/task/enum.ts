@@ -16,7 +16,7 @@ export const Priority = {
   LOW: "LOW",
   MEDIUM: "MEDIUM",
   HIGH: "HIGH",
-  CRITICAL: "CRITICAL",
+  URGENT: "URGENT",
 };
 
 export const TaskPriorityConfig = {
@@ -38,7 +38,7 @@ export const TaskPriorityConfig = {
     badgeClassName:
       "border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900 dark:bg-orange-950 dark:text-orange-300",
   },
-  [Priority.CRITICAL]: {
+  [Priority.URGENT]: {
     label: "긴급",
     dotColor: "bg-rose-500",
     badgeClassName:

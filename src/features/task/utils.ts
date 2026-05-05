@@ -4,6 +4,55 @@ import { Task, TaskStatusType } from "./type";
 export type KanbanTaskGroups = Record<TaskStatusType, Task[]>;
 
 /**
+ * 필터 조건에 따라 Task를 필터링
+ */
+export function filterTasks(
+  tasks: Task[],
+  filters: {
+    search?: string;
+    assigneeIds?: string[];
+    priorities?: string[];
+    labelIds?: string[];
+  },
+): Task[] {
+  return tasks.filter((task) => {
+    // 검색어 필터
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      const matches =
+        task.title.toLowerCase().includes(searchLower) ||
+        task.description?.toLowerCase().includes(searchLower) ||
+        `#${task.taskNumber}`.includes(filters.search);
+
+      if (!matches) return false;
+    }
+
+    // 담당자 필터
+    if (filters.assigneeIds && filters.assigneeIds.length > 0) {
+      const hasAssignee = task.taskAssignee.some((ta) =>
+        filters.assigneeIds!.includes(ta.userId),
+      );
+      if (!hasAssignee) return false;
+    }
+
+    // 우선순위 필터
+    if (filters.priorities && filters.priorities.length > 0) {
+      if (!filters.priorities.includes(task.priority)) return false;
+    }
+
+    // 라벨 필터
+    if (filters.labelIds && filters.labelIds.length > 0) {
+      const hasLabel = task.taskLabel.some((tl) =>
+        filters.labelIds!.includes(tl.labelId),
+      );
+      if (!hasLabel) return false;
+    }
+
+    return true;
+  });
+}
+
+/**
  * Task를 상태별로 그룹화하고, 각 그룹 내에서 order 순으로 정렬
  */
 export function buildTasksByStatus(data: Task[]): KanbanTaskGroups {

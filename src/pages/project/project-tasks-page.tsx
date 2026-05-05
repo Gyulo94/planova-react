@@ -1,7 +1,7 @@
 import { useProjectSocket } from "@/hooks/use-project-socket";
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
-import KanbanFilter from "@/features/project/components/kanban-filter";
+import { KanbanFilter } from "@/features/project/components/kanban-filter";
 import KanbanBoard from "@/features/task/components/kanban/kanban-board";
 import {
   useFindTasksByProjectId,
@@ -9,14 +9,24 @@ import {
 } from "@/features/task/query";
 import { Task, TaskStatusType } from "@/features/task/type";
 import { useQueryClient } from "@tanstack/react-query";
+import { filterTasks } from "@/features/task/utils";
+import { useKanbanFilterStore } from "@/features/task/store";
 
-export default function ProjectSprintPage() {
+export default function ProjectTasksPage() {
   const { projectId } = useParams();
   const { data: tasks = [], isLoading } = useFindTasksByProjectId(projectId);
   const { mutate: reorderTasks } = useReorderTasks();
   const queryClient = useQueryClient();
+  const { search, assigneeIds, priorities, labelIds } = useKanbanFilterStore();
 
   useProjectSocket(projectId);
+
+  const filteredTasks = filterTasks(tasks, {
+    search,
+    assigneeIds,
+    priorities,
+    labelIds,
+  });
 
   const handleKanbanChange = (
     updates: {
@@ -54,7 +64,7 @@ export default function ProjectSprintPage() {
         <Separator className="my-4" />
         <KanbanFilter />
         <Separator className="my-4" />
-        <KanbanBoard data={tasks} onChange={handleKanbanChange} />
+        <KanbanBoard data={filteredTasks} onChange={handleKanbanChange} />
       </div>
     </div>
   );
