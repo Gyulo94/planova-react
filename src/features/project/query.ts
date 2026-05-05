@@ -5,6 +5,7 @@ import z from "zod/v3";
 import { ProjectFormSchema } from "./schema";
 import {
   createProject,
+  createLabel,
   deleteProject,
   findProjectById,
   findProjects,
@@ -106,4 +107,25 @@ export function useFindLabelsByProjectId(projectId?: string) {
     enabled: !!projectId,
   });
   return query;
+}
+
+export function useCreateLabelByProjectId(projectId?: string) {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (name: string) => createLabel(projectId, name),
+    onSuccess: (data) => {
+      toast.success(data.message);
+      queryClient.invalidateQueries({
+        queryKey: ["projectLabels", { projectId }],
+      });
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    },
+  });
+
+  return mutation;
 }

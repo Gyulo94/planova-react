@@ -26,8 +26,8 @@ const routes = [
     icon: ClockIcon,
   },
   {
-    label: "스프린트",
-    href: "sprints",
+    label: "작업",
+    href: "tasks",
     icon: LuListTodo,
   },
   {

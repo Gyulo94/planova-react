@@ -42,3 +42,12 @@ export async function findLabelsByProjectId(projectId?: string) {
   const response = await api.get(`/project/${projectId}/labels`);
   return response.data.body;
 }
+
+export async function createLabel(projectId?: string, name?: string) {
+  const response = await api.post(`/label/create`, {
+    name,
+    projectId,
+  });
+
+  return response.data;
+}
