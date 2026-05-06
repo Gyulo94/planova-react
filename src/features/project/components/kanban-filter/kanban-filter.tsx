@@ -13,8 +13,13 @@ import {
   MemberAvatarStack,
   PriorityFilterContent,
 } from ".";
+import React from "react";
 
-export default function KanbanFilter() {
+interface KanbanFilterProps {
+  extraFilters?: React.ReactNode;
+}
+
+export default function KanbanFilter({ extraFilters }: KanbanFilterProps) {
   const { projectId } = useParams();
 
   const { data: projectMembers = [] } = useFindProjectMembers(projectId);
@@ -47,7 +52,6 @@ export default function KanbanFilter() {
 
   return (
     <div className="flex flex-row justify-between items-center gap-4">
-      {/* 왼쪽: 검색 + 필터 */}
       <div className="flex items-center gap-3">
         <Input
           placeholder="검색 (제목, #번호)"
@@ -103,6 +107,8 @@ export default function KanbanFilter() {
               초기화
             </Button>
           )}
+
+          {extraFilters}
         </div>
       </div>
       <MemberAvatarStack members={projectMembers} visibleCount={6} />

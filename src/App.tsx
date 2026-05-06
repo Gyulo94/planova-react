@@ -15,6 +15,8 @@ import {
   WorkspaceSettingPage,
   ProjectTeamPage,
   ProjectTasksPage,
+  TaskDetailPage,
+  ProjectTimelinePage,
 } from "./pages";
 import {
   AuthRoute,
@@ -73,6 +75,14 @@ function App() {
               <Route
                 path="/workspaces/:workspaceId/projects/:projectId/tasks"
                 element={<ProjectTasksPage />}
+              />
+              <Route
+                path="/workspaces/:workspaceId/projects/:projectId/timelines"
+                element={<ProjectTimelinePage />}
+              />
+              <Route
+                path="/workspaces/:workspaceId/projects/:projectId/tasks/:taskId"
+                element={<TaskDetailPage />}
               />
               <Route
                 path="/workspaces/:workspaceId/projects/:projectId/team"
