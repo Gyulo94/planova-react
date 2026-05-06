@@ -3,7 +3,11 @@ import { CSS } from "@dnd-kit/utilities";
 import KanbanCard from "./kanban-card";
 import { Task } from "../../type";
 
-export function SortableTask({ task }: { task: Task }) {
+interface SortableTaskProps {
+  task: Task;
+}
+
+export default function SortableTask({ task }: SortableTaskProps) {
   const {
     attributes,
     listeners,

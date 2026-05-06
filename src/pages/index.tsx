@@ -11,6 +11,8 @@ export { default as ProjectDashboardPage } from "./project/project-dashboard-pag
 export { default as JoinWorkspacePage } from "./workspace/join-workspace-page";
 export { default as RegisterVerifyMailPage } from "./auth/register-verify-mail-page";
 export { default as ProjectTasksPage } from "./project/project-tasks-page";
+export { default as TaskDetailPage } from "./project/task-detail-page";
 export { default as WorkspaceTeamPage } from "./workspace/workspace-team-page";
 export { default as WorkspaceSettingPage } from "./workspace/workspace-setting-page";
 export { default as ProjectTeamPage } from "./project/project-team-page";
+export { default as ProjectTimelinePage } from "./project/project-timeline-page";

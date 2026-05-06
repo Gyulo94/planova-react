@@ -2,7 +2,6 @@ import { useProjectSocket } from "@/hooks/use-project-socket";
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { KanbanFilter } from "@/features/project/components/kanban-filter";
-import KanbanBoard from "@/features/task/components/kanban/kanban-board";
 import {
   useFindTasksByProjectId,
   useReorderTasks,
@@ -11,6 +10,7 @@ import { Task, TaskStatusType } from "@/features/task/type";
 import { useQueryClient } from "@tanstack/react-query";
 import { filterTasks } from "@/features/task/utils";
 import { useKanbanFilterStore } from "@/features/task/store";
+import { KanbanBoard } from "@/features/task/components/kanban";
 
 export default function ProjectTasksPage() {
   const { projectId } = useParams();

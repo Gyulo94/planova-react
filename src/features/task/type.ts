@@ -1,5 +1,5 @@
 import { Project } from "../project/type";
-import { TaskAssignee } from "../TaskAssignee/type";
+import { TaskAssignee } from "../task-assignee/type";
 import { Priority, TaskStatus } from "./enum";
 
 export type TaskStatusType = (typeof TaskStatus)[keyof typeof TaskStatus];

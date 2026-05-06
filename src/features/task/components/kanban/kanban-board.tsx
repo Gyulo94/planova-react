@@ -1,40 +1,22 @@
+import { DndContext, DragOverlay, closestCorners } from "@dnd-kit/core";
 import {
-  DndContext,
-  DragOverlay,
-  DragOverEvent,
-  DragEndEvent,
-  DragStartEvent,
-  PointerSensor,
-  closestCorners,
-  useDroppable,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useCallback, useMemo, useRef, useState } from "react";
 import { Task, TaskStatusType } from "../../type";
-import KanbanColumnHeader from "./kanban-column-header";
-import { SortableTask } from "./sortable-task";
-import KanbanCard from "./kanban-card";
+import {
+  SortableTask,
+  KanbanCard,
+  DroppableColumn,
+  KanbanColumnHeader,
+} from ".";
 import { TaskStatus } from "../../enum";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useOpenTaskDialogStore } from "../../store";
 import { useParams } from "react-router-dom";
-import {
-  buildPayload,
-  buildTasksByStatus,
-  canMoveToStatus,
-  findTaskStatus,
-  getDestinationStatus,
-  moveTask,
-  type KanbanTaskGroups,
-} from "../../utils";
+import { useKanbanDnd } from "../../hook";
 
-interface Props {
+interface KanbanBoardProps {
   data?: Task[];
   onChange?: (
     updates: {
@@ -45,147 +27,18 @@ interface Props {
   ) => void;
 }
 
-function DroppableColumn({
-  status,
-  children,
-}: {
-  status: TaskStatusType;
-  children: React.ReactNode;
-}) {
-  const { setNodeRef, isOver } = useDroppable({ id: status });
-
-  return (
-    <div
-      ref={setNodeRef}
-      className={[
-        "mt-4 min-h-[calc(100vh-275px)] rounded-lg transition-colors",
-        isOver ? "bg-primary/5" : "bg-transparent",
-      ].join(" ")}
-    >
-      {children}
-    </div>
-  );
-}
-
-export default function KanbanBoard({ data = [], onChange }: Props) {
+export default function KanbanBoard({ data = [], onChange }: KanbanBoardProps) {
   const { workspaceId, projectId } = useParams();
   const { onOpen } = useOpenTaskDialogStore();
-  const groupedTasks = useMemo(() => buildTasksByStatus(data), [data]);
-  const [dragTasks, setDragTasks] = useState<KanbanTaskGroups | null>(null);
-  const [activeTaskId, setActiveTaskId] = useState<string | null>(null);
-  const dragTasksRef = useRef<KanbanTaskGroups | null>(null);
-
-  const tasks = dragTasks ?? groupedTasks;
-  const activeTask = useMemo(
-    () => data.find((task) => task.id === activeTaskId) ?? null,
-    [activeTaskId, data],
-  );
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-  );
-
-  const onDragStart = useCallback(
-    (event: DragStartEvent) => {
-      setActiveTaskId(String(event.active.id));
-      setDragTasks(groupedTasks);
-      dragTasksRef.current = groupedTasks;
-    },
-    [groupedTasks],
-  );
-
-  const onDragOver = useCallback((event: DragOverEvent) => {
-    const { active, over } = event;
-
-    if (!over) {
-      return;
-    }
-
-    const activeId = String(active.id);
-    const overId = String(over.id);
-
-    if (activeId === overId) {
-      return;
-    }
-
-    setDragTasks((current) => {
-      if (!current) return current;
-
-      const sourceStatus = findTaskStatus(current, activeId);
-
-      if (!sourceStatus) {
-        return current;
-      }
-
-      const destStatus = getDestinationStatus(current, overId, sourceStatus);
-
-      if (!canMoveToStatus(sourceStatus, destStatus)) {
-        return current;
-      }
-
-      const isSameContainer = sourceStatus === destStatus;
-      const activeIndex = current[sourceStatus].findIndex(
-        (task) => task.id === activeId,
-      );
-      const overIndex = current[destStatus].findIndex(
-        (task) => task.id === overId,
-      );
-
-      if (isSameContainer && activeIndex === overIndex) {
-        return current;
-      }
-
-      if (isSameContainer && activeIndex !== -1 && overIndex !== -1) {
-        const nextTasks = {
-          ...current,
-          [sourceStatus]: arrayMove(
-            current[sourceStatus],
-            activeIndex,
-            overIndex,
-          ),
-        };
-
-        dragTasksRef.current = nextTasks;
-        return nextTasks;
-      }
-
-      const nextTasks = moveTask(current, activeId, overId);
-      dragTasksRef.current = nextTasks;
-      return nextTasks;
-    });
-  }, []);
-
-  const onDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const { over } = event;
-      setActiveTaskId(null);
-
-      if (!over) {
-        setDragTasks(null);
-        dragTasksRef.current = null;
-        return;
-      }
-
-      const finalTasks = dragTasksRef.current ?? groupedTasks;
-      const payload = buildPayload(finalTasks, groupedTasks);
-
-      setDragTasks(null);
-      dragTasksRef.current = null;
-
-      if (payload.length === 0) {
-        return;
-      }
-
-      onChange?.(payload);
-    },
-    [groupedTasks, onChange],
-  );
-
-  const onDragCancel = useCallback(() => {
-    setActiveTaskId(null);
-    setDragTasks(null);
-    dragTasksRef.current = null;
-  }, []);
+  const {
+    tasks,
+    activeTask,
+    sensors,
+    onDragStart,
+    onDragOver,
+    onDragEnd,
+    onDragCancel,
+  } = useKanbanDnd({ data, onChange });
 
   return (
     <div className="flex-1 w-full bg-background">
