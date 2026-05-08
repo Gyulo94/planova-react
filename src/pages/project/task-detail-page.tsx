@@ -73,7 +73,6 @@ export default function TaskDetailPage() {
         workspaceId={workspaceId}
         projectId={projectId}
         taskId={task.id}
-        title={task.title}
         taskNumber={task.taskNumber}
         status={task.status}
         isAdmin={
