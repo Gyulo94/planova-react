@@ -11,20 +11,17 @@ import ProjectSwitcher from "./project-switcher";
 import ProjectNavigation from "./project-navigation";
 import WorkspaceNavigation from "./workspace-navigation";
 import { LOGO, LOGO_NAME } from "@/lib/constants";
+import { Link } from "react-router-dom";
 
-interface AppSidebarProps {
-  workspaceId?: string;
-}
-
-export default function AppSidebar({ workspaceId }: AppSidebarProps) {
+export default function AppSidebar() {
   return (
     <Sidebar>
       <SidebarHeader className="p-4">
-        <div className="flex items-center">
+        <Link to="/" className="flex items-center">
           <img
             src={LOGO}
             alt={LOGO}
-            className="size-10 object-cover object-center"
+            className="size-8 object-cover object-center"
           />
           <SidebarGroupLabel>
             <img
@@ -33,7 +30,7 @@ export default function AppSidebar({ workspaceId }: AppSidebarProps) {
               className="h-7 object-contain"
             />
           </SidebarGroupLabel>
-        </div>
+        </Link>
       </SidebarHeader>
       <Separator className="mb-4" />
       <SidebarContent>

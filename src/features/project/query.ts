@@ -11,6 +11,7 @@ import {
   findProjects,
   updateProject,
   findLabelsByProjectId,
+  findTaskCountsByProjectId,
 } from "./api";
 import { Project } from "./type";
 import { useNavigate } from "react-router-dom";
@@ -65,6 +66,9 @@ export function useUpdateProject(projectId?: string) {
       queryClient.invalidateQueries({ queryKey: ["projects"] });
       queryClient.invalidateQueries({
         queryKey: ["project", { projectId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["projectTaskCounts", { projectId }],
       });
     },
     onError: (error) => {
@@ -128,4 +132,13 @@ export function useCreateLabelByProjectId(projectId?: string) {
   });
 
   return mutation;
+}
+
+export function useFindTaskCountsByProjectId(projectId?: string) {
+  const query = useQuery({
+    queryKey: ["projectTaskCounts", { projectId }],
+    queryFn: () => findTaskCountsByProjectId(projectId),
+    enabled: !!projectId,
+  });
+  return query;
 }

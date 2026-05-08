@@ -17,6 +17,7 @@ export function getSocket(): Socket {
       withCredentials: true,
       autoConnect: false,
       path: "/socket.io",
+      transports: ["websocket"],
     });
   }
   return socket;

@@ -3,9 +3,6 @@ import { Task, TaskStatusType } from "./type";
 
 export type KanbanTaskGroups = Record<TaskStatusType, Task[]>;
 
-/**
- * 필터 조건에 따라 Task를 필터링
- */
 export function filterTasks(
   tasks: Task[],
   filters: {
@@ -16,7 +13,6 @@ export function filterTasks(
   },
 ): Task[] {
   return tasks.filter((task) => {
-    // 검색어 필터
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       const matches =
@@ -27,7 +23,6 @@ export function filterTasks(
       if (!matches) return false;
     }
 
-    // 담당자 필터
     if (filters.assigneeIds && filters.assigneeIds.length > 0) {
       const hasAssignee = task.taskAssignee.some((ta) =>
         filters.assigneeIds!.includes(ta.userId),
@@ -35,12 +30,10 @@ export function filterTasks(
       if (!hasAssignee) return false;
     }
 
-    // 우선순위 필터
     if (filters.priorities && filters.priorities.length > 0) {
       if (!filters.priorities.includes(task.priority)) return false;
     }
 
-    // 라벨 필터
     if (filters.labelIds && filters.labelIds.length > 0) {
       const hasLabel = task.taskLabel.some((tl) =>
         filters.labelIds!.includes(tl.labelId),
@@ -52,9 +45,6 @@ export function filterTasks(
   });
 }
 
-/**
- * Task를 상태별로 그룹화하고, 각 그룹 내에서 order 순으로 정렬
- */
 export function buildTasksByStatus(data: Task[]): KanbanTaskGroups {
   const groups = Object.fromEntries(
     Object.values(TaskStatus).map((status) => [status, [] as Task[]]),
@@ -73,9 +63,6 @@ export function buildTasksByStatus(data: Task[]): KanbanTaskGroups {
   return groups;
 }
 
-/**
- * 특정 taskId가 어느 상태에 있는지 찾음
- */
 export function findTaskStatus(
   tasks: KanbanTaskGroups,
   taskId: string,
@@ -87,9 +74,6 @@ export function findTaskStatus(
   );
 }
 
-/**
- * 드래그 앤 드롭 시 도착할 상태를 결정
- */
 export function getDestinationStatus(
   tasks: KanbanTaskGroups,
   overId: string,
@@ -106,21 +90,19 @@ export function getDestinationStatus(
   return findTaskStatus(tasks, overId) ?? fallbackStatus;
 }
 
-/**
- * 해당 상태로 이동 가능한지 체크
- */
 export function canMoveToStatus(
   sourceStatus: TaskStatusType,
   destinationStatus: TaskStatusType,
 ): boolean {
+  if (sourceStatus === TaskStatus.DONE) {
+    return destinationStatus === TaskStatus.DONE;
+  }
+
   return (
     sourceStatus === destinationStatus || destinationStatus !== TaskStatus.DONE
   );
 }
 
-/**
- * Task를 이동한 새로운 KanbanTaskGroups 반환 (불변성 유지)
- */
 export function moveTask(
   tasks: KanbanTaskGroups,
   activeId: string,
@@ -157,9 +139,6 @@ export function moveTask(
   return nextTasks;
 }
 
-/**
- * 변경된 Task만 payload로 추출 (서버 업데이트용)
- */
 export function buildPayload(
   current: KanbanTaskGroups,
   baseline: KanbanTaskGroups,

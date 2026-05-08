@@ -17,6 +17,9 @@ import {
   ProjectTasksPage,
   TaskDetailPage,
   ProjectTimelinePage,
+  ProjectSettingPage,
+  ProjectEpicPage,
+  ProjectMilestonePage,
 } from "./pages";
 import {
   AuthRoute,
@@ -26,7 +29,6 @@ import {
   WorkspaceRoute,
 } from "./routes";
 import RootLayout from "./components/shared/layout/root-layout";
-import ProjectSettingPage from "./pages/project/project-setting-page";
 
 function App() {
   return (
@@ -83,6 +85,14 @@ function App() {
               <Route
                 path="/workspaces/:workspaceId/projects/:projectId/tasks/:taskId"
                 element={<TaskDetailPage />}
+              />
+              <Route
+                path="/workspaces/:workspaceId/projects/:projectId/epics"
+                element={<ProjectEpicPage />}
+              />
+              <Route
+                path="/workspaces/:workspaceId/projects/:projectId/milestones"
+                element={<ProjectMilestonePage />}
               />
               <Route
                 path="/workspaces/:workspaceId/projects/:projectId/team"

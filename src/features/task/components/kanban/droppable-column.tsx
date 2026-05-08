@@ -16,7 +16,7 @@ export default function DroppableColumn({
     <div
       ref={setNodeRef}
       className={[
-        "mt-4 min-h-[calc(100vh-275px)] rounded-lg transition-colors",
+        "min-h-[calc(100vh-275px)] rounded-lg transition-colors",
         isOver ? "bg-primary/5" : "bg-transparent",
       ].join(" ")}
     >

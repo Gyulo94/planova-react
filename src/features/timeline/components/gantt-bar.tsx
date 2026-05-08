@@ -1,4 +1,4 @@
-import { roundedBar } from "../utils";
+import { getStatusSoftColor, getStatusStrongColor, roundedBar } from "../utils";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProgressBar(props: any) {
@@ -38,4 +38,38 @@ export function RemainingBar(props: any) {
   );
 
   return <path d={path} fill={fill} />;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function CombinedTaskBar(props: any) {
+  const { x, y, width, height, payload } = props;
+  const { progress, status } = payload;
+
+  const progressWidth = (width * progress) / 100;
+  const remainingWidth = width - progressWidth;
+
+  return (
+    <g>
+      {progressWidth > 0 && (
+        <ProgressBar
+          x={x}
+          y={y}
+          width={progressWidth}
+          height={height}
+          fill={getStatusStrongColor(status)}
+          remainingDuration={remainingWidth}
+        />
+      )}
+      {remainingWidth > 0 && (
+        <RemainingBar
+          x={x + progressWidth}
+          y={y}
+          width={remainingWidth}
+          height={height}
+          fill={getStatusSoftColor(status)}
+          progressDuration={progressWidth}
+        />
+      )}
+    </g>
+  );
 }

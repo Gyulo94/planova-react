@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { TaskStatusType } from "./type";
 
-interface TaskDialogState {
+interface OpenTaskDialogState {
   isOpen: boolean;
+  id?: string;
   workspaceId?: string;
   projectId?: string;
   initialStatus?: TaskStatusType;
@@ -14,10 +15,10 @@ interface TaskDialogState {
   onClose: () => void;
 }
 
-export const useOpenTaskDialogStore = create<TaskDialogState>((set) => ({
+export const useOpenTaskDialogStore = create<OpenTaskDialogState>((set) => ({
   isOpen: false,
-  workspaceId: "",
-  projectId: "",
+  workspaceId: undefined,
+  projectId: undefined,
   initialStatus: "TODO",
   onOpen: (workspaceId, projectId, initialStatus) =>
     set({
@@ -29,8 +30,47 @@ export const useOpenTaskDialogStore = create<TaskDialogState>((set) => ({
   onClose: () =>
     set({
       isOpen: false,
-      workspaceId: "",
-      projectId: "",
+      workspaceId: undefined,
+      projectId: undefined,
+      initialStatus: "TODO",
+    }),
+}));
+
+interface EditTaskDialogState {
+  isOpen: boolean;
+  id?: string;
+  workspaceId?: string;
+  projectId?: string;
+  initialStatus?: TaskStatusType;
+  onOpen: (
+    id?: string,
+    workspaceId?: string,
+    projectId?: string,
+    initialStatus?: TaskStatusType,
+  ) => void;
+  onClose: () => void;
+}
+
+export const useEditTaskDialogStore = create<EditTaskDialogState>((set) => ({
+  isOpen: false,
+  id: undefined,
+  workspaceId: undefined,
+  projectId: undefined,
+  initialStatus: "TODO",
+  onOpen: (id, workspaceId, projectId, initialStatus) =>
+    set({
+      isOpen: true,
+      id,
+      workspaceId,
+      projectId,
+      initialStatus: initialStatus ?? "TODO",
+    }),
+  onClose: () =>
+    set({
+      isOpen: false,
+      id: undefined,
+      workspaceId: undefined,
+      projectId: undefined,
       initialStatus: "TODO",
     }),
 }));

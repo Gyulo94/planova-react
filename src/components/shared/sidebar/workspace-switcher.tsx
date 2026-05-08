@@ -8,7 +8,7 @@ import {
 import SquareAvatar from "@/components/ui/square-avatar";
 import { useFindWorkspaces } from "@/features/workspace/query";
 import { useOpenWorkspaceDialogStore } from "@/features/workspace/store";
-import { RiAddCircleFill } from "react-icons/ri";
+import { RiAddFill } from "react-icons/ri";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function WorkspaceSwitcher() {
@@ -26,10 +26,12 @@ export default function WorkspaceSwitcher() {
     <div className="flex flex-col gap-y-2 px-2">
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">워크스페이스</p>
-        <RiAddCircleFill
-          className="size-5 text-primary cursor-pointer hover:opacity-75 transition"
+        <div
+          className="size-5 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:opacity-75 transition"
           onClick={onOpen}
-        />
+        >
+          <RiAddFill className="size-4 text-white" />
+        </div>
       </div>
       <Select onValueChange={onSelect} value={workspaceId ?? ""}>
         <SelectTrigger

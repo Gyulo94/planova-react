@@ -28,7 +28,7 @@ export default function DeleteSection({
   return (
     <>
       <ConfirmDialog />
-      <Card className="p-7 border-none shadow-none">
+      <Card className="p-7 rounded-2xl bg-card shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden">
         <div className="flex flex-col">
           <CardTitle className="text-lg">프로젝트 삭제</CardTitle>
           <p className="text-sm text-muted-foreground">

@@ -41,7 +41,7 @@ export default function EditSection({ projectId }: EditSectionProps) {
 
   if (isLoading) {
     return (
-      <Card className="border-none shadow-none">
+      <Card className="rounded-2xl bg-card shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden">
         <CardHeader>
           <CardTitle className="text-lg">프로젝트 수정</CardTitle>
           <CardDescription>프로젝트 정보를 수정합니다.</CardDescription>
@@ -54,7 +54,7 @@ export default function EditSection({ projectId }: EditSectionProps) {
   }
 
   return (
-    <Card className="border-none shadow-none">
+    <Card className="rounded-2xl bg-card shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden">
       <CardHeader>
         <CardTitle className="text-lg">프로젝트 수정</CardTitle>
         <CardDescription>프로젝트 정보를 수정합니다.</CardDescription>

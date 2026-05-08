@@ -55,7 +55,7 @@ export default function InviteCodeSection({ workspaceId }: Props) {
   return (
     <>
       <ConfirmDialog />
-      <Card className="p-7 border-none shadow-none">
+      <Card className="p-7 rounded-2xl bg-card shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden">
         <div className="flex flex-col">
           <CardTitle className="text-lg">멤버 초대</CardTitle>
           <p className="text-sm text-muted-foreground">

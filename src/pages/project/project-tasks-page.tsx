@@ -1,4 +1,3 @@
-import { useProjectSocket } from "@/hooks/use-project-socket";
 import { useParams } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { KanbanFilter } from "@/features/project/components/kanban-filter";
@@ -11,15 +10,22 @@ import { useQueryClient } from "@tanstack/react-query";
 import { filterTasks } from "@/features/task/utils";
 import { useKanbanFilterStore } from "@/features/task/store";
 import { KanbanBoard } from "@/features/task/components/kanban";
+import { useProjectSocket } from "@/features/project/use-project-socket";
+
+import { useSetTitle } from "@/hooks/use-set-title";
 
 export default function ProjectTasksPage() {
   const { projectId } = useParams();
+  useProjectSocket(projectId);
   const { data: tasks = [], isLoading } = useFindTasksByProjectId(projectId);
   const { mutate: reorderTasks } = useReorderTasks();
   const queryClient = useQueryClient();
   const { search, assigneeIds, priorities, labelIds } = useKanbanFilterStore();
 
-  useProjectSocket(projectId);
+  useSetTitle(
+    "작업 목록",
+    "칸반 보드를 통한 프로젝트 작업 관리 및 진행 상황 추적",
+  );
 
   const filteredTasks = filterTasks(tasks, {
     search,
@@ -37,7 +43,7 @@ export default function ProjectTasksPage() {
   ) => {
     if (projectId) {
       queryClient.setQueryData(
-        ["projectTasks", projectId],
+        ["projectTasks", { projectId }],
         (current: Task[] = []) =>
           current
             .map((task) => {
@@ -58,13 +64,17 @@ export default function ProjectTasksPage() {
   if (isLoading) return null;
 
   return (
-    <div className="flex-1 w-full border rounded-lg bg-background h-[calc(100vh-16px)]">
-      <div className="h-full flex flex-col overflow-auto p-4">
-        <h1 className="text-lg font-semibold text-foreground">작업 목록</h1>
-        <Separator className="my-4" />
-        <KanbanFilter />
-        <Separator className="my-4" />
-        <KanbanBoard data={filteredTasks} onChange={handleKanbanChange} />
+    <div className="flex flex-col overflow-hidden">
+      <div className="mt-3 flex justify-end shrink-0">
+        <div className="py-3.5 flex-1 rounded-2xl bg-card shadow-xl shadow-foreground/5 border border-border/50 flex flex-col overflow-hidden">
+          <div className="flex-1 flex flex-col overflow-hidden p-6 py-2">
+            <KanbanFilter />
+            <Separator className="my-4 opacity-50" />
+            <div className="flex-1 overflow-hidden">
+              <KanbanBoard data={filteredTasks} onChange={handleKanbanChange} />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useFindProjectMembers } from "@/features/project-member/query";
 import { useFindLabelsByProjectId } from "@/features/project/query";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useDeferredValue, useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { HistoryIcon, X } from "lucide-react";
 import { useKanbanFilterStore } from "@/features/task/store";
 import {
   AssigneeFilterContent,
@@ -14,6 +14,7 @@ import {
   PriorityFilterContent,
 } from ".";
 import React from "react";
+import { useActivitySidebarStore } from "@/features/activity/store";
 
 interface KanbanFilterProps {
   extraFilters?: React.ReactNode;
@@ -24,7 +25,8 @@ export default function KanbanFilter({ extraFilters }: KanbanFilterProps) {
 
   const { data: projectMembers = [] } = useFindProjectMembers(projectId);
   const { data: labels = [] } = useFindLabelsByProjectId(projectId);
-
+  const { onOpen: onOpenActivity } = useActivitySidebarStore();
+  const location = useLocation();
   const {
     search,
     assigneeIds,
@@ -51,7 +53,7 @@ export default function KanbanFilter({ extraFilters }: KanbanFilterProps) {
     labelIds.length > 0;
 
   return (
-    <div className="flex flex-row justify-between items-center gap-4">
+    <div className="flex justify-between items-center gap-4">
       <div className="flex items-center gap-3">
         <Input
           placeholder="검색 (제목, #번호)"
@@ -103,7 +105,7 @@ export default function KanbanFilter({ extraFilters }: KanbanFilterProps) {
               onClick={reset}
               className="text-muted-foreground hover:text-foreground gap-1"
             >
-              <X className="w-4 h-4" />
+              <X className="size-4" />
               초기화
             </Button>
           )}
@@ -111,7 +113,20 @@ export default function KanbanFilter({ extraFilters }: KanbanFilterProps) {
           {extraFilters}
         </div>
       </div>
-      <MemberAvatarStack members={projectMembers} visibleCount={6} />
+      <div className="flex items-center gap-3">
+        <MemberAvatarStack members={projectMembers} visibleCount={6} />
+        {location.pathname.includes("tasks") && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2 rounded-xl h-10 px-4"
+            onClick={() => onOpenActivity(projectId)}
+          >
+            <HistoryIcon className="size-4" />
+            활동 로그
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

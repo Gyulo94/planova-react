@@ -7,9 +7,16 @@ interface Props {
   url?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
+  textSize?: string;
 }
 
-export default function SquareAvatar({ name, url, size, className }: Props) {
+export default function SquareAvatar({
+  name,
+  url,
+  size,
+  className,
+  textSize,
+}: Props) {
   return (
     <Avatar
       className={cn(
@@ -27,7 +34,7 @@ export default function SquareAvatar({ name, url, size, className }: Props) {
       />
       <AvatarFallback className="bg-primary rounded-md">
         {name ? (
-          <p className={"text-white font-medium"}>
+          <p className={cn("text-white font-medium", textSize)}>
             {name.charAt(0).toUpperCase()}
           </p>
         ) : (

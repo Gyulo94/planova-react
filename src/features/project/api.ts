@@ -51,3 +51,8 @@ export async function createLabel(projectId?: string, name?: string) {
 
   return response.data;
 }
+
+export async function findTaskCountsByProjectId(projectId?: string) {
+  const response = await api.get(`/project/${projectId}/task-counts`);
+  return response.data.body;
+}

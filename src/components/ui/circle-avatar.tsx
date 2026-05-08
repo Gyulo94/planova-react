@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { Skeleton } from "./skeleton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
+import { DEFAULT_AVATAR } from "@/lib/constants";
 
 interface Props {
   name: string;
@@ -51,7 +52,7 @@ export default function CircleAvatar({
           onClick={onClick}
         >
           <AvatarImage
-            src={url || undefined}
+            src={url || DEFAULT_AVATAR}
             alt={name}
             className="object-center object-cover"
           />

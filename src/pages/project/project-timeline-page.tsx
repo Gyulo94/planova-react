@@ -1,22 +1,26 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
-import { useProjectSocket } from "@/hooks/use-project-socket";
+import { useProjectSocket } from "@/features/project/use-project-socket";
 import { useFindTasksByProjectId } from "@/features/task/query";
 import { useKanbanFilterStore } from "@/features/task/store";
 import { filterTasks } from "@/features/task/utils";
 import type { TaskStatusType } from "@/features/task/type";
 import { useTimelineData } from "@/features/timeline/hook";
 import { GanttChart } from "@/features/timeline/components/gantt-chart";
+import { TimelineHeader } from "@/features/timeline/components/timeline-header";
 import { TimelineFilter } from "@/features/timeline/components/timeline-filter";
+import { useSetTitle } from "@/hooks/use-set-title";
 
 export default function ProjectTimelinePage() {
   const { projectId } = useParams();
   const { data: tasks = [] } = useFindTasksByProjectId(projectId);
   const { search, assigneeIds, priorities, labelIds } = useKanbanFilterStore();
+
+  useSetTitle("타임라인", "프로젝트 작업들의 일정 및 선후 관계 시각화");
 
   const [selectedStatuses, setSelectedStatuses] = useState<TaskStatusType[]>(
     [],
@@ -48,44 +52,47 @@ export default function ProjectTimelinePage() {
     useTimelineData(statusFiltered, { dayWidth });
 
   return (
-    <Card className="shadow-none">
-      <CardHeader className="flex flex-row flex-wrap justify-between gap-2">
-        <div>
-          <CardTitle>프로젝트 타임라인</CardTitle>
-        </div>
-      </CardHeader>
-
-      <CardContent className="p-0">
-        <div className="px-6 pb-4">
-          <Separator />
-          <div className="py-4">
-            <TimelineFilter
-              selectedStatuses={selectedStatuses}
-              onToggleStatus={toggleStatus}
-              dayWidth={dayWidth}
-              onDayWidthChange={setDayWidth}
-            />
-          </div>
-          <Separator />
-        </div>
-
-        {chartData.length === 0 ? (
-          <div className="flex h-[300px] items-center justify-center text-muted-foreground">
-            등록된 작업이 없습니다.
-          </div>
-        ) : (
-          <ScrollArea className="w-full">
-            <div style={{ width: chartMinWidth, height: chartHeight }}>
-              <GanttChart
-                chartData={chartData}
-                timelineStart={timelineStart}
-                totalDays={totalDays}
+    <div className="h-[calc(100vh-65px)] py-8 max-w-[1800px] mx-auto flex flex-col overflow-hidden">
+      <Card className="flex-1 flex flex-col rounded-2xl bg-card shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden">
+        <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
+          <div className="px-6 py-2">
+            <div className="py-2">
+              <TimelineFilter
+                selectedStatuses={selectedStatuses}
+                onToggleStatus={toggleStatus}
+                dayWidth={dayWidth}
+                onDayWidthChange={setDayWidth}
               />
             </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        )}
-      </CardContent>
-    </Card>
+            <Separator className="opacity-50" />
+          </div>
+
+          {chartData.length === 0 ? (
+            <div className="flex flex-1 items-center justify-center text-muted-foreground bg-muted/5">
+              조회된 작업 데이터가 없습니다.
+            </div>
+          ) : (
+            <ScrollArea className="w-full flex-1 min-h-0">
+              <div className="relative px-6 pb-6" style={{ width: chartMinWidth + 48 }}>
+                <TimelineHeader
+                  timelineStart={timelineStart}
+                  totalDays={totalDays}
+                  dayWidth={dayWidth}
+                />
+                <div style={{ height: chartHeight }}>
+                  <GanttChart
+                    chartData={chartData}
+                    timelineStart={timelineStart}
+                    totalDays={totalDays}
+                    hideXAxis
+                  />
+                </div>
+              </div>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }

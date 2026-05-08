@@ -6,6 +6,7 @@ import {
   findWorkspaces,
   resetInviteCode,
   updateWorkspace,
+  findWorkspaceStats,
 } from "./api";
 import { Workspace } from "./type";
 import { toast } from "sonner";
@@ -114,4 +115,13 @@ export function useResetInviteCode() {
     },
   });
   return mutation;
+}
+
+export function useFindWorkspaceStats(workspaceId?: string) {
+  const query = useQuery({
+    queryKey: ["workspaceStats", { workspaceId }],
+    queryFn: () => findWorkspaceStats(workspaceId),
+    enabled: !!workspaceId,
+  });
+  return query;
 }

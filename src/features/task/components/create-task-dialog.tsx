@@ -4,16 +4,17 @@ import { PriorityTypes, StatusTypes, TaskFormSchema } from "../schema";
 import { useState } from "react";
 import z from "zod/v3";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import TaskForm from "./task-form";
 import { useSession } from "@/features/user/query";
 
 export default function CreateTaskDialog() {
-  const { isOpen, onClose, projectId, initialStatus } = useOpenTaskDialogStore();
+  const { isOpen, onClose, workspaceId, projectId, initialStatus } =
+    useOpenTaskDialogStore();
   const { data: session } = useSession();
   const [isDisabled, setIsDisabled] = useState(false);
   const { mutate: createTask } = useCreateTask();
@@ -28,6 +29,8 @@ export default function CreateTaskDialog() {
     dueDate: new Date(),
     assigneeId: session?.id ?? "",
     projectId: projectId ?? "",
+    epicId: "none",
+    milestoneId: "none",
   };
 
   function onSubmit(values: z.infer<typeof TaskFormSchema>) {
@@ -53,6 +56,8 @@ export default function CreateTaskDialog() {
           onSubmit={onSubmit}
           defaultValues={defaultValues}
           isDisabled={isDisabled}
+          workspaceId={workspaceId}
+          projectId={projectId}
         />
       </DialogContent>
     </Dialog>

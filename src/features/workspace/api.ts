@@ -36,3 +36,8 @@ export async function resetInviteCode(workspaceId?: string) {
   const response = await api.put(`/workspace/${workspaceId}/invite-code/reset`);
   return response.data;
 }
+
+export async function findWorkspaceStats(workspaceId?: string) {
+  const response = await api.get(`/workspace/${workspaceId}/stats`);
+  return response.data;
+}

@@ -20,7 +20,7 @@ export default function KanbanColumnHeader({
   const config = TaskStatusConfig[status];
 
   return (
-    <div className="px-3 py-2.5 flex items-center justify-between bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10">
+    <div className="px-3 py-2.5 flex items-center justify-between bg-background/80 backdrop-blur-sm border-b sticky top-0 z-10 rounded-t-xl">
       <div className="flex items-center gap-x-3">
         <div className={`p-1.5 rounded-md ${config.bgColor}`}>
           {<config.icon className={`size-4 ${config.color}-600`} />}

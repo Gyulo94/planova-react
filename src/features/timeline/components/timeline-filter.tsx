@@ -1,5 +1,6 @@
 import { KanbanFilter } from "@/features/project/components/kanban-filter";
 import { FilterButton } from "@/features/project/components/kanban-filter";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -40,26 +41,27 @@ export function TimelineFilter({
                 const config = TaskStatusConfig[status];
                 const Icon = config.icon;
                 return (
-                  <button
+                  <div
                     key={status}
                     onClick={() => onToggleStatus(status as TaskStatusType)}
-                    className={`w-full flex items-center gap-2 p-2 rounded hover:bg-accent transition-colors text-left ${
+                    className={`cursor-pointer w-full flex items-center gap-2 p-2 rounded hover:bg-accent transition-colors text-left ${
                       selectedStatuses.includes(status as TaskStatusType)
                         ? "bg-accent"
                         : ""
                     }`}
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={selectedStatuses.includes(
                         status as TaskStatusType,
                       )}
-                      readOnly
-                      className="rounded"
+                      onCheckedChange={() =>
+                        onToggleStatus(status as TaskStatusType)
+                      }
+                      onClick={(e) => e.stopPropagation()}
                     />
                     <Icon className="w-4 h-4 text-muted-foreground" />
                     <span className="text-sm">{config.label}</span>
-                  </button>
+                  </div>
                 );
               })}
             </div>

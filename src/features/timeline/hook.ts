@@ -67,15 +67,16 @@ export function useTimelineData(
           (duration - progressDuration).toFixed(2),
         );
 
-        // 최소 길이 보정
         if (safeProgress > 0 && progressDuration < 0.2) progressDuration = 0.2;
         if (safeProgress < 100 && remainingDuration < 0.2)
           remainingDuration = 0.2;
 
         return {
           id: task.id,
-          taskLabel: `#${task.taskNumber} ${task.title}`,
+          taskLabel: task.title,
+          taskNumber: task.taskNumber,
           startOffset,
+          duration,
           progressDuration,
           remainingDuration,
           startDateLabel: start.toLocaleDateString("ko-KR", {
@@ -90,14 +91,25 @@ export function useTimelineData(
           }),
           progress: safeProgress,
           status: task.status,
+          priority: task.priority,
         };
       },
     );
 
-    const chartMinWidth = Math.max(900, totalDays * dayWidth);
+    const chartMinWidth = totalDays * dayWidth;
     const chartHeight =
       chartData.length * (BAR_SIZE + rowGap) + CHART_VERTICAL_PADDING;
 
-    return { chartData, timelineStart, totalDays, chartMinWidth, chartHeight };
+    return {
+      chartData,
+      timelineStart,
+      totalDays,
+      chartMinWidth,
+      chartHeight,
+      todayOffset: differenceInCalendarDays(
+        startOfDay(new Date()),
+        timelineStart,
+      ),
+    };
   }, [dayWidth, rowGap, sortedTasks]);
 }

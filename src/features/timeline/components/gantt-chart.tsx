@@ -14,8 +14,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import type { TimelineChartItem } from "../type";
-import { ProgressBar, RemainingBar } from "./gantt-bar";
-import { getStatusSoftColor, getStatusStrongColor } from "../utils";
+import { CombinedTaskBar } from "./gantt-bar";
 import { GanttBarLabel } from "./gantt-bar-label";
 
 const chartConfig = {
@@ -29,6 +28,7 @@ type GanttChartProps = {
   timelineStart: Date;
   totalDays: number;
   rowGap?: number;
+  hideXAxis?: boolean;
 };
 
 export function GanttChart({
@@ -36,6 +36,7 @@ export function GanttChart({
   timelineStart,
   totalDays,
   rowGap = 12,
+  hideXAxis = false,
 }: GanttChartProps) {
   const xAxisTicks = useMemo(
     () => Array.from({ length: totalDays }, (_, index) => index),
@@ -43,28 +44,38 @@ export function GanttChart({
   );
 
   return (
-    <ChartContainer config={chartConfig} className="h-full w-full px-6">
+    <ChartContainer config={chartConfig} className="h-full w-full p-0">
       <BarChart
         data={chartData}
         layout="vertical"
-        margin={{ top: 8, right: 24, left: 12, bottom: 8 }}
+        margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
         barCategoryGap={rowGap}
       >
         <CartesianGrid horizontal={false} strokeDasharray="3 3" />
-        <XAxis
-          type="number"
-          domain={[0, totalDays]}
-          ticks={xAxisTicks}
-          tickFormatter={(value) => {
-            const date = new Date(timelineStart);
-            date.setDate(date.getDate() + Number(value));
-            return format(date, "M/d");
-          }}
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          interval={0}
-        />
+        {!hideXAxis && (
+          <XAxis
+            type="number"
+            domain={[0, totalDays]}
+            ticks={xAxisTicks}
+            tickFormatter={(value) => {
+              const date = new Date(timelineStart);
+              date.setDate(date.getDate() + Number(value));
+              return format(date, "M/d");
+            }}
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            interval={0}
+          />
+        )}
+        {hideXAxis && (
+          <XAxis
+            type="number"
+            domain={[0, totalDays]}
+            ticks={xAxisTicks}
+            hide
+          />
+        )}
         <YAxis type="category" dataKey="id" hide />
 
         <ChartTooltip
@@ -94,32 +105,10 @@ export function GanttChart({
           barSize={28}
         />
         <Bar
-          dataKey="progressDuration"
+          dataKey="duration"
           stackId="timeline"
           barSize={28}
-          shape={(props) => {
-            const payload = props.payload as TimelineChartItem;
-            return (
-              <ProgressBar
-                {...props}
-                fill={getStatusStrongColor(payload.status)}
-              />
-            );
-          }}
-        />
-        <Bar
-          dataKey="remainingDuration"
-          stackId="timeline"
-          barSize={28}
-          shape={(props) => {
-            const payload = props.payload as TimelineChartItem;
-            return (
-              <RemainingBar
-                {...props}
-                fill={getStatusSoftColor(payload.status)}
-              />
-            );
-          }}
+          shape={(props) => <CombinedTaskBar {...props} />}
         >
           <LabelList dataKey="taskLabel" content={GanttBarLabel} />
         </Bar>

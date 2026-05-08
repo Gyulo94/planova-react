@@ -41,7 +41,7 @@ export default function EditSection({ workspaceId }: EditSectionProps) {
 
   if (isLoading) {
     return (
-      <Card className="border-none shadow-none">
+      <Card className="rounded-2xl bg-card shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden">
         <CardHeader>
           <CardTitle className="text-lg">워크스페이스 수정</CardTitle>
           <CardDescription>워크스페이스 정보를 수정합니다.</CardDescription>
@@ -54,19 +54,20 @@ export default function EditSection({ workspaceId }: EditSectionProps) {
   }
 
   return (
-    <Card className="border-none shadow-none">
-      <CardHeader>
+    <Card className="p-7 rounded-2xl bg-card shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden">
+      <div className="flex flex-col">
         <CardTitle className="text-lg">워크스페이스 수정</CardTitle>
-        <CardDescription>워크스페이스 정보를 수정합니다.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <WorkspaceForm
-          id={workspaceId}
-          isDisabled={isDisabled}
-          onSubmit={onSubmit}
-          defaultValues={defaultValues}
-        />
-      </CardContent>
+        <p className="text-sm text-muted-foreground">
+          워크스페이스 정보를 수정합니다.
+        </p>
+      </div>
+
+      <WorkspaceForm
+        id={workspaceId}
+        isDisabled={isDisabled}
+        onSubmit={onSubmit}
+        defaultValues={defaultValues}
+      />
     </Card>
   );
 }

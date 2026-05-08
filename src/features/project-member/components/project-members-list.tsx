@@ -58,89 +58,96 @@ export default function ProjectMembersList({
   return (
     <>
       <ConfirmDialog />
-      <Card className="size-full border-none shadow-none">
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">프로젝트 멤버</h2>
-            {projectMembers?.find((m) => m.userId === session?.id)?.role !==
-              "MEMBER" && (
-              <Button onClick={handleInviteMember}>
-                <PlusIcon />새 멤버 추가
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
+      <div className="flex flex-col">
+        <div className="flex items-center justify-between p-6 pb-4">
+          <h2 className="text-xl font-bold text-foreground">프로젝트 멤버</h2>
+          {projectMembers?.find((m) => m.userId === session?.id)?.role !==
+            "MEMBER" && (
+            <Button onClick={handleInviteMember} className="rounded-xl gap-2">
+              <PlusIcon className="size-4" />새 멤버 초대
+            </Button>
+          )}
+        </div>
+
+        <Separator className="opacity-50" />
+
+        <div className="p-6 space-y-4">
           {projectMembers?.map((member, index) => (
             <Fragment key={member.id}>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4 group transition-all">
                 <CircleAvatar
                   url={member.user.image || DEFAULT_AVATAR}
                   name={member.user.name || "Unknown User"}
                   size="lg"
-                  className="cursor-pointer"
-                  onClick={() => {}}
+                  className="size-11 border-2 border-background shadow-sm"
                 />
-                <div className="flex flex-col">
-                  <p className="text-sm font-medium">
-                    {member.user.name || "Unknown User"}{" "}
-                    {member.role === "OWNER" ? (
-                      <Badge
-                        variant={"default"}
-                        className="py-0 px-1.5 ml-auto"
-                      >
-                        소유자
-                      </Badge>
-                    ) : null}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
+                <div className="flex flex-col min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-bold text-foreground truncate">
+                      {member.user.name || "Unknown User"}
+                    </p>
+                    <div className="flex gap-1">
+                      {member.role === "OWNER" && (
+                        <Badge variant="default" className="text-[10px] py-0 px-2 bg-primary/10 text-primary border-none font-bold">
+                          소유자
+                        </Badge>
+                      )}
+                      {member.role === "ADMIN" && (
+                        <Badge variant="secondary" className="text-[10px] py-0 px-2 font-bold">
+                          관리자
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate">
                     {member.user.email || "Unknown Email"}
                   </p>
                 </div>
-                {session?.id !== member.userId && member.role !== "OWNER" ? (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        className="ml-auto"
-                        variant={"ghost"}
-                        size={"icon"}
-                      >
-                        <MoreVerticalIcon className="size-4 text-muted-foreground" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="bottom" align="end">
-                      <DropdownMenuItem
-                        className="font-medium"
-                        onClick={() => handleUpdateMember(member.userId)}
-                        disabled={false}
-                      >
-                        {member.role === "MEMBER"
-                          ? "어드민으로 변경"
-                          : "멤버로 변경"}
-                      </DropdownMenuItem>
 
-                      <DropdownMenuItem
-                        className="font-medium text-destructive"
-                        onClick={() => handleRemoveMember(member.userId)}
-                        disabled={false}
-                      >
-                        멤버 추방
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                ) : (
-                  session?.id === member.userId && (
-                    <Badge className="ml-auto">나</Badge>
-                  )
-                )}
+                <div className="ml-auto flex items-center gap-2">
+                  {session?.id === member.userId && (
+                    <Badge variant="outline" className="text-[10px] font-bold border-primary/30 text-primary">나</Badge>
+                  )}
+                  
+                  {session?.id !== member.userId && member.role !== "OWNER" && (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="size-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <MoreVerticalIcon className="size-4 text-muted-foreground" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent side="bottom" align="end" className="rounded-xl">
+                        <DropdownMenuItem
+                          className="font-medium cursor-pointer"
+                          onClick={() => handleUpdateMember(member.userId)}
+                        >
+                          {member.role === "MEMBER"
+                            ? "관리자로 지정"
+                            : "멤버로 변경"}
+                        </DropdownMenuItem>
+
+                        <DropdownMenuItem
+                          className="font-medium text-destructive cursor-pointer"
+                          onClick={() => handleRemoveMember(member.userId)}
+                        >
+                          멤버 추방
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </div>
               </div>
               {index < projectMembers.length - 1 && (
-                <Separator className="my-2.5" />
+                <Separator className="opacity-30" />
               )}
             </Fragment>
           ))}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </>
   );
 }

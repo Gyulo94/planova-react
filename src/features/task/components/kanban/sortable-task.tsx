@@ -5,9 +5,19 @@ import { Task } from "../../type";
 
 interface SortableTaskProps {
   task: Task;
+  isAdmin: boolean;
+  onEdit?: (task: Task) => void;
+  onDelete?: (task: Task) => void;
+  onApprove?: (task: Task) => void;
 }
 
-export default function SortableTask({ task }: SortableTaskProps) {
+export default function SortableTask({
+  task,
+  isAdmin,
+  onEdit,
+  onDelete,
+  onApprove,
+}: SortableTaskProps) {
   const {
     attributes,
     listeners,
@@ -25,7 +35,13 @@ export default function SortableTask({ task }: SortableTaskProps) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <KanbanCard task={task} />
+      <KanbanCard 
+        task={task} 
+        isAdmin={isAdmin}
+        onEdit={onEdit} 
+        onDelete={onDelete}
+        onApprove={onApprove} 
+      />
     </div>
   );
 }

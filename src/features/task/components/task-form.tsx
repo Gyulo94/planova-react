@@ -39,6 +39,11 @@ import { Role } from "@/features/workspace-member/type";
 import { useSession } from "@/features/user/query";
 import { useFindLabelsByProjectId } from "@/features/project/query";
 import { TaskPriorityConfig } from "../enum";
+import { useFindEpics } from "@/features/epic/query";
+import { useFindMilestones } from "@/features/milestone/query";
+import { TaskLabel } from "../type";
+import { Epic } from "@/features/epic/type";
+import { Milestone } from "@/features/milestone/type";
 
 const TASK_PRIORITY_OPTIONS = Object.entries(TaskPriorityConfig).map(
   ([value, config]) => ({
@@ -59,6 +64,9 @@ interface Props {
   defaultValues?: z.infer<typeof TaskFormSchema>;
   onSubmit: (values: z.infer<typeof TaskFormSchema>) => void;
   isDisabled?: boolean;
+  id?: string;
+  workspaceId?: string;
+  projectId?: string;
 }
 
 type ProjectLabel = {
@@ -72,11 +80,15 @@ export default function TaskForm({
   defaultValues,
   onSubmit,
   isDisabled,
+  id,
+  workspaceId,
+  projectId,
 }: Props) {
   const { data: session } = useSession();
-  const { workspaceId, projectId } = useOpenTaskDialogStore();
   const { data: workspaceMembers = [] } = useFindWorkspaceMembers(workspaceId);
   const { data: projectLabels = [] } = useFindLabelsByProjectId(projectId);
+  const { data: epics = [] } = useFindEpics(projectId);
+  const { data: milestones = [] } = useFindMilestones(projectId);
 
   const members = workspaceMembers.map((member) => ({
     id: member.user.id,
@@ -89,9 +101,21 @@ export default function TaskForm({
   )?.role;
   const isAdmin = myRole === Role.ADMIN || myRole === Role.OWNER;
 
+  console.log("myRole: ", myRole);
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
   const [label, setLabel] = useState("");
+
+  useEffect(() => {
+    if (defaultValues?.labelId) {
+      const matchedLabel = (projectLabels as ProjectLabel[]).find(
+        (l) => l.id === defaultValues.labelId,
+      );
+      if (matchedLabel) setLabel(matchedLabel.name);
+    } else if (defaultValues?.labelName) {
+      setLabel(defaultValues.labelName);
+    }
+  }, [defaultValues, projectLabels]);
 
   const form = useForm<z.infer<typeof TaskFormSchema>>({
     resolver: zodResolver(TaskFormSchema),
@@ -99,10 +123,16 @@ export default function TaskForm({
   });
 
   useEffect(() => {
-    if (!isAdmin && session?.id) {
+    if (defaultValues) {
+      form.reset(defaultValues);
+    }
+  }, [defaultValues, form]);
+
+  useEffect(() => {
+    if (!id && !isAdmin && session?.id) {
       form.setValue("assigneeId", session.id, { shouldValidate: true });
     }
-  }, [form, isAdmin, session?.id]);
+  }, [form, isAdmin, session?.id, id]);
 
   return (
     <Form {...form}>
@@ -120,9 +150,12 @@ export default function TaskForm({
 
             onSubmit({
               ...values,
+              epicId: values.epicId === "none" ? null : values.epicId,
+              milestoneId:
+                values.milestoneId === "none" ? null : values.milestoneId,
               labelId: matchedLabel?.id || undefined,
               labelName:
-                !matchedLabel && normalizedLabel ? normalizedLabel : undefined,
+                !matchedLabel && normalizedLabel ? normalizedLabel : "",
             });
           }
         })}
@@ -150,7 +183,7 @@ export default function TaskForm({
                 <FormLabel>담당자</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                   disabled={!isAdmin}
                 >
                   <FormControl>
@@ -186,10 +219,7 @@ export default function TaskForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>우선순위</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="우선순위를 선택하세요" />
@@ -318,7 +348,8 @@ export default function TaskForm({
                 <FormLabel>작업 상태</FormLabel>
                 <Select
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
+                  disabled={defaultValues?.status === "DONE"}
                 >
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -359,9 +390,77 @@ export default function TaskForm({
             />
           </FormItem>
         </div>
+        <FormField
+          control={form.control}
+          name="epicId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>에픽</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                value={field.value || "none"}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="에픽을 선택하세요" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent position="popper" side="bottom">
+                  <SelectItem value="none">선택 안 함</SelectItem>
+                  {epics.map((epic: Epic) => (
+                    <SelectItem key={epic.id} value={epic.id} className="h-12">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-xs font-bold text-primary opacity-70">
+                          EPIC-{epic.epicNumber}
+                        </span>
+                        <span className="line-clamp-1">{epic.title}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="milestoneId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>마일스톤</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                value={field.value || "none"}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="마일스톤을 선택하세요" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent position="popper" side="bottom">
+                  <SelectItem value="none">선택 안 함</SelectItem>
+                  {milestones.map((milestone: Milestone) => (
+                    <SelectItem
+                      key={milestone.id}
+                      value={milestone.id}
+                      className="h-12"
+                    >
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] font-bold text-primary opacity-70">
+                          {format(new Date(milestone.dueDate), "yyyy.MM.dd")}
+                        </span>
+                        <span>{milestone.title}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
+          )}
+        />
         <div className="flex justify-end space-x-2">
           <Button type="submit" disabled={isDisabled}>
-            완료
+            {id ? "수정" : "생성"}
           </Button>
         </div>
       </form>

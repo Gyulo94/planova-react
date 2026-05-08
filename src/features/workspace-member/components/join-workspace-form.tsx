@@ -6,6 +6,7 @@ import { useFindWorkspaceById } from "@/features/workspace/query";
 import { useJoinWorkspace } from "../query";
 import { useEffect, useState } from "react";
 import { NotFoundPage } from "@/pages";
+import SquareAvatar from "@/components/ui/square-avatar";
 
 interface JoinWorkspaceFormProps {
   workspaceId?: string;
@@ -42,11 +43,12 @@ export default function JoinWorkspaceForm({
           워크스페이스 참가
         </CardTitle>
       </CardHeader>
-      <div className="border relative size-32 mx-auto rounded-lg overflow-hidden bg-neutral-100">
-        <img
-          src={workspace?.image}
-          className="object-center object-cover"
-          alt={workspace?.name}
+      <div className="border relative size-32 mx-auto rounded-lg overflow-hidden">
+        <SquareAvatar
+          name={workspace?.name}
+          url={workspace?.image}
+          className="size-full"
+          textSize="text-8xl"
         />
       </div>
       <p className="text-sm text-center px-4 text-muted-foreground">

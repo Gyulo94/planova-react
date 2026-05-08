@@ -133,6 +133,18 @@ export default function WorkspaceForm({
                     <p className="text-xs text-muted-foreground">
                       JPG, PNG, WEBP • 최대 10MB
                     </p>
+                    {field.value && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 -ml-2"
+                        onClick={() => form.setValue("image", "")}
+                        disabled={isDisabled || uploading}
+                      >
+                        이미지 제거
+                      </Button>
+                    )}
                   </div>
                 </div>
 
@@ -161,7 +173,7 @@ export default function WorkspaceForm({
             </Button>
           ) : null}
           <Button type="submit" size="md" disabled={isDisabled || uploading}>
-            {id ? "수정하기" : "생성하기"}
+            {id ? "수정" : "생성"}
           </Button>
         </div>
       </form>

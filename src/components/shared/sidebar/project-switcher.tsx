@@ -11,7 +11,7 @@ import { useFindProjects } from "@/features/project/query";
 import { useOpenProjectDialogStore } from "@/features/project/store";
 import { useSession } from "@/features/user/query";
 import { useFindWorkspaceMembers } from "@/features/workspace-member/query";
-import { RiAddCircleFill } from "react-icons/ri";
+import { RiAddFill } from "react-icons/ri";
 import { useNavigate } from "react-router-dom";
 
 export default function ProjectSwitcher() {
@@ -36,10 +36,12 @@ export default function ProjectSwitcher() {
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">프로젝트</p>
         {myRole === "OWNER" && (
-          <RiAddCircleFill
-            className="size-5 text-primary cursor-pointer hover:opacity-75 transition"
+          <div
+            className="size-5 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:opacity-75 transition"
             onClick={() => onOpen(workspaceId)}
-          />
+          >
+            <RiAddFill className="size-4 text-white" />
+          </div>
         )}
       </div>
       <Select onValueChange={onSelect} value={selectedProjectId}>

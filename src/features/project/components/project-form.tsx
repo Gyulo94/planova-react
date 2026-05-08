@@ -114,8 +114,8 @@ export default function ProjectForm({
                         )}
                       </>
                     ) : (
-                      <Avatar className="size-[72px] hover:bg-gray-50 transition-colors">
-                        <AvatarFallback>
+                      <Avatar className="size-[72px] hover:bg-gray-50 transition-colors rounded-md">
+                        <AvatarFallback className="rounded-md">
                           {uploading ? (
                             <Loader className="border-neutral-400 border-t-transparent" />
                           ) : (
@@ -132,9 +132,19 @@ export default function ProjectForm({
                         ? "이미지를 변경하려면 클릭하세요"
                         : "프로젝트 로고를 등록하세요"}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      JPG, PNG, WEBP • 최대 10MB
-                    </p>
+                    <p className="text-xs text-muted-foreground">최대 10MB</p>
+                    {field.value && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 px-2 text-destructive hover:text-destructive hover:bg-destructive/10 -ml-2"
+                        onClick={() => form.setValue("image", "")}
+                        disabled={isDisabled || uploading}
+                      >
+                        이미지 제거
+                      </Button>
+                    )}
                   </div>
                 </div>
 
@@ -167,7 +177,7 @@ export default function ProjectForm({
             size="md"
             disabled={isDisabled || uploading || isLoading}
           >
-            {id ? "수정하기" : "생성하기"}
+            {id ? "수정" : "생성"}
           </Button>
         </div>
       </form>

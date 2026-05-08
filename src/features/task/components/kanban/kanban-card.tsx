@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import {
   CalendarIcon,
@@ -20,17 +19,23 @@ import CircleAvatar from "@/components/ui/circle-avatar";
 import { Task } from "../../type";
 import { TaskPriorityConfig } from "../../enum";
 import { DEFAULT_AVATAR } from "@/lib/constants";
+import { Link } from "react-router-dom";
+import { Progress } from "@/components/ui/progress";
 
 interface KanbanCardProps {
   task: Task;
+  isAdmin?: boolean;
   onEdit?: (task: Task) => void;
   onDelete?: (task: Task) => void;
+  onApprove?: (task: Task) => void;
 }
 
 export default function KanbanCard({
   task,
+  isAdmin,
   onEdit,
   onDelete,
+  onApprove,
 }: KanbanCardProps) {
   const priority = TaskPriorityConfig[task.priority];
   const assignee = task.taskAssignee?.[0]?.user;
@@ -42,9 +47,12 @@ export default function KanbanCard({
         <Badge variant="secondary" className="shrink-0 mt-0.5 text-center">
           # {task.taskNumber}
         </Badge>
-        <p className="min-w-0 flex-1 text-sm font-medium leading-snug line-clamp-1 text-foreground">
+        <Link
+          to={`${task.id}`}
+          className="min-w-0 flex-1 text-sm font-medium leading-snug line-clamp-1 text-foreground underline-offset-2 hover:underline"
+        >
           {task.title}
-        </p>
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -64,20 +72,43 @@ export default function KanbanCard({
           >
             <DropdownMenuItem onSelect={() => onEdit?.(task)}>
               <PencilIcon className="size-4" />
-              태스크 수정
+              수정
             </DropdownMenuItem>
             <DropdownMenuItem
               variant="destructive"
               onSelect={() => onDelete?.(task)}
             >
               <Trash2Icon className="size-4" />
-              태스크 삭제
+              삭제
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      <Separator className="mb-3" />
+      {(task.epic || task.milestone) && (
+        <div className="mb-3 flex justify-between flex-wrap gap-1.5">
+          {task.epic && (
+            <Badge
+              variant="outline"
+              className="bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20 text-[10px] font-bold py-0 h-5 flex items-center gap-1 w-fit"
+            >
+              <span className="max-w-[120px] truncate">{task.epic.title}</span>
+            </Badge>
+          )}
+          {task.milestone && (
+            <Badge
+              variant="outline"
+              className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px] font-bold py-0 h-5 flex items-center gap-1 w-fit"
+            >
+              <span className="max-w-[120px] truncate">
+                {task.milestone.title}
+              </span>
+            </Badge>
+          )}
+        </div>
+      )}
+
+      <Progress value={task.progress} className="mb-3" />
 
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -137,6 +168,21 @@ export default function KanbanCard({
           )}
         </div>
       </div>
+      {task.status === "REVIEW" && isAdmin && (
+        <div className="mt-3">
+          <Button
+            variant="primary"
+            size="sm"
+            className="w-full h-8 text-xs bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              onApprove?.(task);
+            }}
+          >
+            승인하기
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

@@ -19,11 +19,19 @@ export type TaskLabel = {
   label: TaskLabelItem;
 };
 
+export type Subtask = {
+  id: string;
+  title: string;
+  completed: boolean;
+  order: number;
+  taskId: string;
+};
+
 export type Task = {
   id: string;
   taskNumber: number;
   title: string;
-  description: string | null;
+  description?: string;
   progress: number;
   status: TaskStatusType;
   priority: PriorityType;
@@ -38,6 +46,9 @@ export type Task = {
   createdAt: Date;
   updatedAt: Date;
   project: Project;
+  epic?: import("../epic/type").Epic;
+  milestone?: import("../milestone/type").Milestone;
   taskAssignee: TaskAssignee[];
   taskLabel: TaskLabel[];
+  subtask: Subtask[];
 };

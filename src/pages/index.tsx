@@ -16,3 +16,6 @@ export { default as WorkspaceTeamPage } from "./workspace/workspace-team-page";
 export { default as WorkspaceSettingPage } from "./workspace/workspace-setting-page";
 export { default as ProjectTeamPage } from "./project/project-team-page";
 export { default as ProjectTimelinePage } from "./project/project-timeline-page";
+export { default as ProjectSettingPage } from "./project/project-setting-page";
+export { default as ProjectEpicPage } from "./project/project-epic-page";
+export { default as ProjectMilestonePage } from "./project/project-milestone-page";
