@@ -68,7 +68,7 @@ export default function TaskDetailPage() {
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto flex flex-col gap-0 bg-card rounded-2xl shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden mb-12">
+    <div className="w-full mt-10 max-w-5xl mx-auto flex flex-col gap-0 bg-card rounded-2xl shadow-xl shadow-foreground/5 border border-border/50 overflow-hidden mb-12">
       <HeaderSection
         workspaceId={workspaceId}
         projectId={projectId}

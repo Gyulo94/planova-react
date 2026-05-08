@@ -147,7 +147,6 @@ export function useCreateSubtask(taskId?: string) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["task", { taskId }] });
       queryClient.invalidateQueries({ queryKey: ["projectTasks"] });
-      toast.success(data.message);
     },
     onError: (error) => {
       if (error instanceof Error) {
