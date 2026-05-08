@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useSession } from "@/features/user/query";
 
 import { useConfirm } from "@/hooks/use-confirm";
@@ -64,14 +63,16 @@ export default function WorkspaceMembersList({
       <ConfirmDialog />
       <div className="flex flex-col">
         <div className="flex items-center justify-between p-6 pb-4">
-          <h2 className="text-xl font-bold text-foreground">워크스페이스 멤버</h2>
+          <h2 className="text-xl font-bold text-foreground">
+            워크스페이스 멤버
+          </h2>
           {myRole !== "MEMBER" && (
             <Button onClick={handleInviteMember} className="rounded-xl gap-2">
               <PlusIcon className="size-4" />새 멤버 초대
             </Button>
           )}
         </div>
-        
+
         <Separator className="opacity-50" />
 
         <div className="p-6 space-y-4">
@@ -91,12 +92,18 @@ export default function WorkspaceMembersList({
                     </p>
                     <div className="flex gap-1">
                       {member.role === "OWNER" && (
-                        <Badge variant="default" className="text-[10px] py-0 px-2 bg-primary/10 text-primary border-none font-bold">
+                        <Badge
+                          variant="default"
+                          className="text-[10px] py-0 px-2 bg-primary/10 text-primary border-none font-bold"
+                        >
                           소유자
                         </Badge>
                       )}
                       {member.role === "ADMIN" && (
-                        <Badge variant="secondary" className="text-[10px] py-0 px-2 font-bold">
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] py-0 px-2 font-bold"
+                        >
                           관리자
                         </Badge>
                       )}
@@ -109,9 +116,14 @@ export default function WorkspaceMembersList({
 
                 <div className="ml-auto flex items-center gap-2">
                   {session?.id === member.userId && (
-                    <Badge variant="outline" className="text-[10px] font-bold border-primary/30 text-primary">나</Badge>
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] font-bold border-primary/30 text-primary"
+                    >
+                      나
+                    </Badge>
                   )}
-                  
+
                   {session?.id !== member.userId && member.role !== "OWNER" && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -123,7 +135,11 @@ export default function WorkspaceMembersList({
                           <MoreVerticalIcon className="size-4 text-muted-foreground" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent side="bottom" align="end" className="rounded-xl">
+                      <DropdownMenuContent
+                        side="bottom"
+                        align="end"
+                        className="rounded-xl"
+                      >
                         <DropdownMenuItem
                           className="font-medium cursor-pointer"
                           onClick={() => handleUpdateMember(member.userId)}

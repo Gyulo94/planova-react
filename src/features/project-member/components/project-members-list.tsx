@@ -1,4 +1,3 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useSession } from "@/features/user/query";
 
 import { useConfirm } from "@/hooks/use-confirm";
@@ -88,12 +87,18 @@ export default function ProjectMembersList({
                     </p>
                     <div className="flex gap-1">
                       {member.role === "OWNER" && (
-                        <Badge variant="default" className="text-[10px] py-0 px-2 bg-primary/10 text-primary border-none font-bold">
+                        <Badge
+                          variant="default"
+                          className="text-[10px] py-0 px-2 bg-primary/10 text-primary border-none font-bold"
+                        >
                           소유자
                         </Badge>
                       )}
                       {member.role === "ADMIN" && (
-                        <Badge variant="secondary" className="text-[10px] py-0 px-2 font-bold">
+                        <Badge
+                          variant="secondary"
+                          className="text-[10px] py-0 px-2 font-bold"
+                        >
                           관리자
                         </Badge>
                       )}
@@ -106,9 +111,14 @@ export default function ProjectMembersList({
 
                 <div className="ml-auto flex items-center gap-2">
                   {session?.id === member.userId && (
-                    <Badge variant="outline" className="text-[10px] font-bold border-primary/30 text-primary">나</Badge>
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] font-bold border-primary/30 text-primary"
+                    >
+                      나
+                    </Badge>
                   )}
-                  
+
                   {session?.id !== member.userId && member.role !== "OWNER" && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -120,7 +130,11 @@ export default function ProjectMembersList({
                           <MoreVerticalIcon className="size-4 text-muted-foreground" />
                         </Button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent side="bottom" align="end" className="rounded-xl">
+                      <DropdownMenuContent
+                        side="bottom"
+                        align="end"
+                        className="rounded-xl"
+                      >
                         <DropdownMenuItem
                           className="font-medium cursor-pointer"
                           onClick={() => handleUpdateMember(member.userId)}

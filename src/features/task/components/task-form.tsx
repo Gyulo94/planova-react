@@ -33,7 +33,6 @@ import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod/v3";
-import { useOpenTaskDialogStore } from "../store";
 import { useFindWorkspaceMembers } from "@/features/workspace-member/query";
 import { Role } from "@/features/workspace-member/type";
 import { useSession } from "@/features/user/query";
@@ -41,7 +40,6 @@ import { useFindLabelsByProjectId } from "@/features/project/query";
 import { TaskPriorityConfig } from "../enum";
 import { useFindEpics } from "@/features/epic/query";
 import { useFindMilestones } from "@/features/milestone/query";
-import { TaskLabel } from "../type";
 import { Epic } from "@/features/epic/type";
 import { Milestone } from "@/features/milestone/type";
 

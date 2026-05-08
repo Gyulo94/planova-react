@@ -144,7 +144,7 @@ export function useCreateSubtask(taskId?: string) {
 
   const mutation = useMutation({
     mutationFn: ({ title }: { title: string }) => createSubtask(title, taskId),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["task", { taskId }] });
       queryClient.invalidateQueries({ queryKey: ["projectTasks"] });
     },

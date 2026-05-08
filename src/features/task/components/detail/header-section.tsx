@@ -21,7 +21,6 @@ interface HeaderSectionProps {
   workspaceId?: string;
   projectId?: string;
   taskId: string;
-  title: string;
   taskNumber: number;
   status: string;
   isAdmin: boolean;
@@ -32,7 +31,6 @@ export default function HeaderSection({
   workspaceId,
   projectId,
   taskId,
-  title,
   taskNumber,
   status,
   isAdmin,
