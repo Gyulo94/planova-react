@@ -114,14 +114,13 @@ export default function RecentTasks({
                       </div>
 
                       <div className="flex -space-x-2">
-                        {task.taskAssignee?.slice(0, 3).map((assignee) => (
+                        {task.assignee && (
                           <CircleAvatar
-                            key={assignee.id}
-                            url={assignee.user.image ?? DEFAULT_AVATAR}
-                            name={assignee.user.name ?? ""}
+                            url={task.assignee.image ?? DEFAULT_AVATAR}
+                            name={task.assignee.name ?? ""}
                             className="size-5 border-2 border-background"
                           />
-                        ))}
+                        )}
                       </div>
                     </div>
                   </CardContent>

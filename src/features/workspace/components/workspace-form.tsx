@@ -130,9 +130,7 @@ export default function WorkspaceForm({
                         ? "이미지를 변경하려면 클릭하세요"
                         : "워크스페이스 로고를 등록하세요"}
                     </p>
-                    <p className="text-xs text-muted-foreground">
-                      JPG, PNG, WEBP • 최대 10MB
-                    </p>
+                    <p className="text-xs text-muted-foreground">최대 10MB</p>
                     {field.value && (
                       <Button
                         type="button"

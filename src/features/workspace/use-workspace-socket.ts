@@ -103,6 +103,20 @@ export function useWorkspaceSocket(workspaceId?: string) {
       }
     }
 
+    function handleUserUpdated(updatedUser: any) {
+      if (updatedUser.id === session?.id) {
+        queryClient.invalidateQueries({ queryKey: ["session"] });
+      }
+      
+      queryClient.invalidateQueries({ queryKey: ["workspace-member"] });
+      queryClient.invalidateQueries({ queryKey: ["project-member"] });
+      queryClient.invalidateQueries({ queryKey: ["available-workspace-members"] });
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      queryClient.invalidateQueries({ queryKey: ["projectTasks"] });
+      queryClient.invalidateQueries({ queryKey: ["comments"] });
+      queryClient.invalidateQueries({ queryKey: ["activities"] });
+    }
+
     socket.on("connect", handleConnect);
     socket.on("workspace:member_joined", handleMemberUpdated);
     socket.on("workspace:member_removed", handleWorkspaceMemberRemoved);
@@ -111,6 +125,7 @@ export function useWorkspaceSocket(workspaceId?: string) {
     socket.on("workspace:task_updated", handleTaskUpdated);
     socket.on("project:member_invited", handleProjectMemberInvited);
     socket.on("project:member_removed", handleProjectMemberRemoved);
+    socket.on("user:updated", handleUserUpdated);
 
     if (!socket.connected) {
       socket.connect();
@@ -130,6 +145,7 @@ export function useWorkspaceSocket(workspaceId?: string) {
       socket.off("workspace:task_updated", handleTaskUpdated);
       socket.off("project:member_invited", handleProjectMemberInvited);
       socket.off("project:member_removed", handleProjectMemberRemoved);
+      socket.off("user:updated", handleUserUpdated);
     };
   }, [
     workspaceId,

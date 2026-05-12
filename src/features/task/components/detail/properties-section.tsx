@@ -9,8 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import CircleAvatar from "@/components/ui/circle-avatar";
 import { TaskPriorityConfig, TaskStatusConfig } from "@/features/task/enum";
-import { Task, TaskLabel } from "@/features/task/type";
-import { TaskAssignee } from "@/features/task-assignee/type";
+import { Task } from "@/features/task/type";
 import { cn } from "@/lib/utils";
 import { PropertyRow } from ".";
 import { Progress } from "@/components/ui/progress";
@@ -24,8 +23,8 @@ export default function PropertiesSection({ task }: PropertiesSectionProps) {
   const priorityConfig = TaskPriorityConfig[task.priority];
   const StatusIcon = statusConfig.icon;
 
-  const assignees = task.taskAssignee ?? [];
-  const labels = task.taskLabel ?? [];
+  const assignee = task.assignee;
+  const label = task.label;
 
   const createdAt = new Date(task.createdAt).toLocaleDateString("ko-KR");
   const startDate = task.startDate
@@ -40,17 +39,15 @@ export default function PropertiesSection({ task }: PropertiesSectionProps) {
       <div className="grid grid-cols-2 gap-x-2">
         <PropertyRow icon={<UserIcon className="size-4" />} label="담당자">
           <div className="flex items-center gap-1.5 flex-wrap">
-            {assignees.length > 0 ? (
-              assignees.map(({ user }: TaskAssignee) => (
-                <div key={user.id} className="flex items-center gap-1.5">
-                  <CircleAvatar
-                    url={user.image ?? undefined}
-                    name={user.name ?? user.email}
-                    size="sm"
-                  />
-                  <span className="text-sm">{user.name ?? user.email}</span>
-                </div>
-              ))
+            {assignee ? (
+              <div className="flex items-center gap-1.5">
+                <CircleAvatar
+                  url={assignee.image ?? undefined}
+                  name={assignee.name ?? assignee.email}
+                  size="sm"
+                />
+                <span className="text-sm">{assignee.name ?? assignee.email}</span>
+              </div>
             ) : (
               <span className="text-sm text-muted-foreground">없음</span>
             )}
@@ -58,20 +55,17 @@ export default function PropertiesSection({ task }: PropertiesSectionProps) {
         </PropertyRow>
         <PropertyRow icon={<TagIcon className="size-4" />} label="라벨">
           <div className="flex flex-wrap gap-1.5">
-            {labels.length > 0 ? (
-              labels.map(({ label }: TaskLabel) => (
-                <Badge
-                  key={label.id}
-                  variant="secondary"
-                  className="text-xs"
-                  style={{
-                    backgroundColor: label.bgColor,
-                    color: label.textColor,
-                  }}
-                >
-                  {label.name}
-                </Badge>
-              ))
+            {label ? (
+              <Badge
+                variant="secondary"
+                className="text-xs"
+                style={{
+                  backgroundColor: label.bgColor,
+                  color: label.textColor,
+                }}
+              >
+                {label.name}
+              </Badge>
             ) : (
               <span className="text-sm text-muted-foreground">없음</span>
             )}
@@ -131,7 +125,7 @@ export default function PropertiesSection({ task }: PropertiesSectionProps) {
         </PropertyRow>
       </div>
 
-      {(task.epic || task.milestone) && (
+      {(task.epic) && (
         <div className="grid grid-cols-2 gap-x-2">
           {task.epic && (
             <PropertyRow icon={<TargetIcon className="size-4" />} label="에픽">
@@ -145,7 +139,7 @@ export default function PropertiesSection({ task }: PropertiesSectionProps) {
               </Badge>
             </PropertyRow>
           )}
-          {task.milestone && (
+          {task.epic?.milestone && (
             <PropertyRow icon={<TargetIcon className="size-4" />} label="마일스톤">
               <Badge
                 variant="outline"
@@ -153,7 +147,7 @@ export default function PropertiesSection({ task }: PropertiesSectionProps) {
               >
                 <span className="opacity-70 text-[10px]">MILESTONE</span>
                 <span className="w-[1px] h-2 bg-emerald-500/30" />
-                <span>{task.milestone.title}</span>
+                <span>{task.epic.milestone.title}</span>
               </Badge>
             </PropertyRow>
           )}

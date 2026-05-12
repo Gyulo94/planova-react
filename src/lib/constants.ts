@@ -6,3 +6,4 @@ export const LOGO = "/logo.png";
 export const LOGO_NAME = "/logo-name.png";
 export const DEFAULT_AVATAR = "/default-avatar.jpg";
 export const CLINENT_URL = import.meta.env.VITE_CLIENT_URL;
+export const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH;

@@ -44,6 +44,10 @@ function App() {
       {/* 인증된 유저만 접근 가능한 라우트 설정 */}
       <Route element={<PrivateRoute />}>
         <Route path="/workspaces/new" element={<WorkspacePage />} />
+        <Route
+          path="/workspaces/:workspaceId/join/:inviteCode"
+          element={<JoinWorkspacePage />}
+        />
         <Route element={<RootLayout />}>
           {/* 워크스페이스 권한이 있는 유저만 접근 가능하도록 라우트 설정 */}
           <Route element={<WorkspaceRoute />}>
@@ -104,11 +108,6 @@ function App() {
 
         <Route path="/" element={<MainPage />} />
       </Route>
-
-      <Route
-        path="/workspaces/:workspaceId/join/:inviteCode"
-        element={<JoinWorkspacePage />}
-      />
 
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

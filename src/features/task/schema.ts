@@ -14,5 +14,4 @@ export const TaskFormSchema = z.object({
   assigneeId: z.string().min(1, "담당자를 선택해주세요."),
   projectId: z.string().min(1, "프로젝트를 선택해주세요."),
   epicId: z.string().nullable().optional(),
-  milestoneId: z.string().nullable().optional(),
 });

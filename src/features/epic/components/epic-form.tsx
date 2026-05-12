@@ -22,12 +22,22 @@ import {
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useFindMilestones } from "@/features/milestone/query";
+import { Milestone } from "@/features/milestone/type";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface EpicFormProps {
   onSubmit: (values: z.infer<typeof EpicFormSchema>) => void;
   defaultValues: z.infer<typeof EpicFormSchema>;
   isDisabled?: boolean;
   id?: string;
+  projectId?: string;
 }
 
 export default function EpicForm({
@@ -35,7 +45,10 @@ export default function EpicForm({
   defaultValues,
   isDisabled,
   id,
+  projectId,
 }: EpicFormProps) {
+  const { data: milestones = [] } = useFindMilestones(projectId);
+
   const form = useForm<z.infer<typeof EpicFormSchema>>({
     resolver: zodResolver(EpicFormSchema),
     defaultValues,
@@ -43,7 +56,16 @@ export default function EpicForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form
+        onSubmit={form.handleSubmit((values) => {
+          onSubmit({
+            ...values,
+            milestoneId:
+              values.milestoneId === "none" ? null : values.milestoneId,
+          });
+        })}
+        className="space-y-4"
+      >
         <FormField
           control={form.control}
           name="title"
@@ -122,7 +144,6 @@ export default function EpicForm({
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="dueDate"
@@ -167,6 +188,45 @@ export default function EpicForm({
             )}
           />
         </div>
+
+        <FormField
+          control={form.control}
+          name="milestoneId"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>마일스톤</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                value={field.value || "none"}
+                disabled={isDisabled}
+              >
+                <FormControl>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="마일스톤을 선택하세요" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent position="popper" side="bottom">
+                  <SelectItem value="none">선택 안 함</SelectItem>
+                  {milestones.map((milestone: Milestone) => (
+                    <SelectItem
+                      key={milestone.id}
+                      value={milestone.id}
+                      className="h-12"
+                    >
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-[10px] font-bold text-primary opacity-70">
+                          {format(new Date(milestone.dueDate), "yyyy.MM.dd")}
+                        </span>
+                        <span>{milestone.title}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="flex justify-end pt-4">
           <Button type="submit" disabled={isDisabled}>

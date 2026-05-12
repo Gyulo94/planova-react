@@ -22,7 +22,7 @@ export default function ActivityLog({
         <h3 className="text-lg font-semibold">활동 로그</h3>
       </div>
 
-      <Card className="p-0 rounded-xl overflow-hidden shadow-sm border-border/40">
+      <Card className="p-0 rounded-xl border-none shadow-none overflow-hidden">
         <CardContent className="p-0">
           <ScrollArea className="h-[500px] px-4">
             <div className="space-y-4 relative before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[1px] before:bg-border/40">

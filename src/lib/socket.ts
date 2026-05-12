@@ -1,5 +1,5 @@
 import { io, Socket } from "socket.io-client";
-import { SERVER_URL } from "@/lib/constants";
+import { SERVER_URL, SOCKET_PATH } from "@/lib/constants";
 
 let socket: Socket | null = null;
 
@@ -16,7 +16,7 @@ export function getSocket(): Socket {
     socket = io(getSocketServerOrigin(), {
       withCredentials: true,
       autoConnect: false,
-      path: "/socket.io",
+      path: SOCKET_PATH,
       transports: ["websocket"],
     });
   }

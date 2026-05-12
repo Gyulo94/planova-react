@@ -30,6 +30,7 @@ export default function EditEpicDialog() {
     dueDate: new Date(epic?.dueDate || Date.now()),
     workspaceId: epic?.workspaceId ?? "",
     projectId: epic?.projectId ?? "",
+    milestoneId: epic?.milestoneId ?? "none",
   };
 
   function onSubmit(values: z.infer<typeof EpicFormSchema>) {
@@ -57,6 +58,7 @@ export default function EditEpicDialog() {
           defaultValues={defaultValues}
           isDisabled={isDisabled}
           id={id}
+          projectId={epic?.projectId}
         />
       </DialogContent>
     </Dialog>

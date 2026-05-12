@@ -7,4 +7,5 @@ export const EpicFormSchema = z.object({
   dueDate: z.date().min(new Date(), "마감 날짜는 오늘 이후로 설정해주세요."),
   workspaceId: z.string().uuid(),
   projectId: z.string().uuid(),
+  milestoneId: z.string().nullable().optional(),
 });

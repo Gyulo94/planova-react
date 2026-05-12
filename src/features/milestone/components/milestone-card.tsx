@@ -5,21 +5,26 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Calendar, Edit2, Trash2, Milestone as MilestoneIcon } from "lucide-react";
+import {
+  Calendar,
+  Edit2,
+  Trash2,
+  Milestone as MilestoneIcon,
+} from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Milestone } from "@/features/milestone/type";
 
 interface MilestoneCardProps {
   milestone: Milestone;
-  onEdit: (id: string) => void;
-  onDelete: (id: string) => void;
+  handleEdit: (id: string) => void;
+  handleDelete: (id: string) => void;
 }
 
-export function MilestoneCard({
+export default function MilestoneCard({
   milestone,
-  onEdit,
-  onDelete,
+  handleEdit,
+  handleDelete,
 }: MilestoneCardProps) {
   return (
     <Card className="w-full hover:shadow-xl transition-all duration-300 border-border group relative overflow-hidden">
@@ -50,7 +55,7 @@ export function MilestoneCard({
               variant="ghost"
               size="icon"
               className="size-8"
-              onClick={() => onEdit(milestone.id)}
+              onClick={() => handleEdit(milestone.id)}
             >
               <Edit2 className="size-3.5" />
             </Button>
@@ -58,7 +63,7 @@ export function MilestoneCard({
               variant="ghost"
               size="icon"
               className="size-8 text-destructive hover:text-destructive hover:bg-destructive/10 focus:bg-destructive/10 focus:text-destructive"
-              onClick={() => onDelete(milestone.id)}
+              onClick={() => handleDelete(milestone.id)}
             >
               <Trash2 className="size-3.5" />
             </Button>

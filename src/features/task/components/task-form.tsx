@@ -39,9 +39,7 @@ import { useSession } from "@/features/user/query";
 import { useFindLabelsByProjectId } from "@/features/project/query";
 import { TaskPriorityConfig } from "../enum";
 import { useFindEpics } from "@/features/epic/query";
-import { useFindMilestones } from "@/features/milestone/query";
 import { Epic } from "@/features/epic/type";
-import { Milestone } from "@/features/milestone/type";
 
 const TASK_PRIORITY_OPTIONS = Object.entries(TaskPriorityConfig).map(
   ([value, config]) => ({
@@ -86,7 +84,6 @@ export default function TaskForm({
   const { data: workspaceMembers = [] } = useFindWorkspaceMembers(workspaceId);
   const { data: projectLabels = [] } = useFindLabelsByProjectId(projectId);
   const { data: epics = [] } = useFindEpics(projectId);
-  const { data: milestones = [] } = useFindMilestones(projectId);
 
   const members = workspaceMembers.map((member) => ({
     id: member.user.id,
@@ -149,8 +146,6 @@ export default function TaskForm({
             onSubmit({
               ...values,
               epicId: values.epicId === "none" ? null : values.epicId,
-              milestoneId:
-                values.milestoneId === "none" ? null : values.milestoneId,
               labelId: matchedLabel?.id || undefined,
               labelName:
                 !matchedLabel && normalizedLabel ? normalizedLabel : "",
@@ -412,42 +407,6 @@ export default function TaskForm({
                           EPIC-{epic.epicNumber}
                         </span>
                         <span className="line-clamp-1">{epic.title}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="milestoneId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>마일스톤</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                value={field.value || "none"}
-              >
-                <FormControl>
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="마일스톤을 선택하세요" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent position="popper" side="bottom">
-                  <SelectItem value="none">선택 안 함</SelectItem>
-                  {milestones.map((milestone: Milestone) => (
-                    <SelectItem
-                      key={milestone.id}
-                      value={milestone.id}
-                      className="h-12"
-                    >
-                      <div className="flex flex-col gap-0.5">
-                        <span className="text-[10px] font-bold text-primary opacity-70">
-                          {format(new Date(milestone.dueDate), "yyyy.MM.dd")}
-                        </span>
-                        <span>{milestone.title}</span>
                       </div>
                     </SelectItem>
                   ))}

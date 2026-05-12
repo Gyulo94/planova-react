@@ -5,7 +5,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Calendar, Edit2, Trash2, Folder } from "lucide-react";
+import { Calendar, Edit2, Trash2, Folder, Milestone as MilestoneIcon } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Epic } from "@/features/epic/type";
@@ -22,9 +22,17 @@ export function EpicCard({ epic, onEdit, onDelete }: EpicCardProps) {
       <CardHeader className="w-full p-3 pb-1.5">
         <div className="w-full flex justify-between items-start mb-2 min-w-0">
           <div className="flex flex-col gap-1 min-w-0 w-full">
-            <span className="text-[10px] font-bold text-violet-400 tracking-widest uppercase opacity-70 dark:opacity-100">
-              EPIC-{epic.epicNumber}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-violet-400 tracking-widest uppercase opacity-70 dark:opacity-100">
+                EPIC-{epic.epicNumber}
+              </span>
+              {epic.milestone && (
+                <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-1.5 py-0.5 rounded text-[9px] font-bold">
+                  <MilestoneIcon className="size-2.5" />
+                  {epic.milestone.title}
+                </div>
+              )}
+            </div>
             <div className="text-base group-hover:text-violet-400 transition-colors font-bold truncate overflow-hidden min-w-0">
               {epic.title}
             </div>

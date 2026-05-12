@@ -24,10 +24,9 @@ export function filterTasks(
     }
 
     if (filters.assigneeIds && filters.assigneeIds.length > 0) {
-      const hasAssignee = task.taskAssignee.some((ta) =>
-        filters.assigneeIds!.includes(ta.userId),
-      );
-      if (!hasAssignee) return false;
+      if (!task.assigneeId || !filters.assigneeIds.includes(task.assigneeId)) {
+        return false;
+      }
     }
 
     if (filters.priorities && filters.priorities.length > 0) {
@@ -35,10 +34,9 @@ export function filterTasks(
     }
 
     if (filters.labelIds && filters.labelIds.length > 0) {
-      const hasLabel = task.taskLabel.some((tl) =>
-        filters.labelIds!.includes(tl.labelId),
-      );
-      if (!hasLabel) return false;
+      if (!task.labelId || !filters.labelIds.includes(task.labelId)) {
+        return false;
+      }
     }
 
     return true;

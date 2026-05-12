@@ -5,7 +5,6 @@ import { useFindTask } from "@/features/task/query";
 import { useFindProjectMembers } from "@/features/project-member/query";
 import { useFindWorkspaceById } from "@/features/workspace/query";
 import { useSession } from "@/features/user/query";
-import { TaskAssignee } from "@/features/task-assignee/type";
 import {
   CommentsSection,
   HeaderSection,
@@ -52,11 +51,8 @@ export default function TaskDetailPage() {
     );
   }
 
-  const assignees = task.taskAssignee ?? [];
+  const isAssignee = task.assigneeId === session?.id;
   const myMembership = projectMembers.find((m) => m.userId === session?.id);
-  const isAssignee = assignees.some(
-    ({ user }: TaskAssignee) => user.id === session?.id,
-  );
   const canEdit =
     myMembership?.role === "OWNER" ||
     myMembership?.role === "ADMIN" ||

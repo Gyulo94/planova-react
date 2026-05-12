@@ -11,4 +11,5 @@ export type Milestone = {
   projectId: string;
   createdAt?: Date;
   updatedAt?: Date;
+  epics?: import("../epic/type").Epic[];
 };

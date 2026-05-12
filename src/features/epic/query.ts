@@ -38,6 +38,9 @@ export function useCreateEpic() {
       queryClient.invalidateQueries({
         queryKey: ["epics", { projectId: data.body.projectId }],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["milestones", { projectId: data.body.projectId }],
+      });
       toast.success(data.message);
     },
     onError: (error) => {
@@ -58,6 +61,7 @@ export function useUpdateEpic(id?: string) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["epics"] });
       queryClient.invalidateQueries({ queryKey: ["epic", { id }] });
+      queryClient.invalidateQueries({ queryKey: ["milestones"] });
       toast.success(data.message);
     },
     onError: (error) => {

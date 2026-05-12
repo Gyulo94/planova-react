@@ -1,4 +1,3 @@
-// components/kanban/kanban-card.tsx
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,8 +37,8 @@ export default function KanbanCard({
   onApprove,
 }: KanbanCardProps) {
   const priority = TaskPriorityConfig[task.priority];
-  const assignee = task.taskAssignee?.[0]?.user;
-  const labels = task.taskLabel ?? [];
+  const assignee = task.assignee;
+  const label = task.label;
 
   return (
     <div className="group bg-card border border-border rounded-xl p-3.5 shadow-sm hover:shadow-md transition-all duration-200 cursor-grab active:cursor-grabbing">
@@ -85,25 +84,29 @@ export default function KanbanCard({
         </DropdownMenu>
       </div>
 
-      {(task.epic || task.milestone) && (
+      {task.epic && (
         <div className="mb-3 flex justify-between flex-wrap gap-1.5">
           {task.epic && (
-            <Badge
-              variant="outline"
-              className="bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20 text-[10px] font-bold py-0 h-5 flex items-center gap-1 w-fit"
-            >
-              <span className="max-w-[120px] truncate">{task.epic.title}</span>
-            </Badge>
-          )}
-          {task.milestone && (
-            <Badge
-              variant="outline"
-              className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px] font-bold py-0 h-5 flex items-center gap-1 w-fit"
-            >
-              <span className="max-w-[120px] truncate">
-                {task.milestone.title}
-              </span>
-            </Badge>
+            <div className="flex flex-col gap-1 w-full">
+              <Badge
+                variant="secondary"
+                className="bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20 text-[10px] font-bold py-0 h-5 flex items-center gap-1 w-fit"
+              >
+                <span className="max-w-[120px] truncate">
+                  {task.epic.title}
+                </span>
+              </Badge>
+              {task.epic.milestone && (
+                <Badge
+                  variant="outline"
+                  className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 text-[10px] font-bold py-0 h-5 flex items-center gap-1 w-fit"
+                >
+                  <span className="max-w-[120px] truncate">
+                    {task.epic.milestone.title}
+                  </span>
+                </Badge>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -133,22 +136,17 @@ export default function KanbanCard({
 
       <div className="flex items-center justify-between">
         <div className="flex items-center min-w-0 flex-1 flex-wrap gap-1.5 pr-3">
-          {labels.length > 0 ? (
-            labels.map((taskLabel, index) => (
-              <Badge
-                key={
-                  taskLabel.id ?? `${task.id}-${taskLabel.label.id}-${index}`
-                }
-                variant="outline"
-                className="border-transparent text-xs font-medium"
-                style={{
-                  backgroundColor: taskLabel.label.bgColor,
-                  color: taskLabel.label.textColor,
-                }}
-              >
-                {taskLabel.label.name}
-              </Badge>
-            ))
+          {label ? (
+            <Badge
+              variant="outline"
+              className="border-transparent text-xs font-medium"
+              style={{
+                backgroundColor: label.bgColor,
+                color: label.textColor,
+              }}
+            >
+              {label.name}
+            </Badge>
           ) : (
             <span className="text-xs text-muted-foreground">라벨 없음</span>
           )}

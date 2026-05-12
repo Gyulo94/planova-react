@@ -30,7 +30,6 @@ export default function CreateTaskDialog() {
     assigneeId: session?.id ?? "",
     projectId: projectId ?? "",
     epicId: "none",
-    milestoneId: "none",
   };
 
   function onSubmit(values: z.infer<typeof TaskFormSchema>) {

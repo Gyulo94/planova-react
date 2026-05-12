@@ -10,6 +10,7 @@ import EditMilestoneDialog from "@/features/milestone/components/edit-milestone-
 import CreateMilestoneDialog from "@/features/milestone/components/create-milestone-dialog";
 import CreateEpicDialog from "@/features/epic/components/create-epic-dialog";
 import EditEpicDialog from "@/features/epic/components/edit-epic-dialog";
+import { EditUserProfileDialog } from "@/features/user/components/profile-edit-dialog";
 
 export default function ModalProvider() {
   return (
@@ -26,6 +27,7 @@ export default function ModalProvider() {
       <CreateEpicDialog />
       <EditEpicDialog />
       <ProjectActivitySidebar />
+      <EditUserProfileDialog />
     </>
   );
 }

@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { getSocket } from "@/lib/socket";
+import { useSession } from "@/features/user/query";
 
 export function useProjectSocket(projectId?: string) {
   const queryClient = useQueryClient();
   const socket = getSocket();
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (!projectId) return;
@@ -99,6 +101,23 @@ export function useProjectSocket(projectId?: string) {
       });
     }
 
+    function handleUserUpdated(updatedUser: any) {
+      if (updatedUser.id === session?.id) {
+        queryClient.invalidateQueries({ queryKey: ["session"] });
+      }
+
+      queryClient.invalidateQueries({
+        queryKey: ["project-member", { projectId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["available-workspace-members", { projectId }],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["projectTasks", { projectId }],
+      });
+      queryClient.invalidateQueries({ queryKey: ["activities"] });
+    }
+
     socket.on("connect", handleConnect);
     socket.on("task:reordered", handleTaskReordered);
     socket.on("task:created", handleTaskCreated);
@@ -114,6 +133,7 @@ export function useProjectSocket(projectId?: string) {
     socket.on("epic:updated", handleEpicUpdated);
     socket.on("epic:deleted", handleEpicUpdated);
     socket.on("label:created", handleLabelCreated);
+    socket.on("user:updated", handleUserUpdated);
 
     if (!socket.connected) {
       socket.connect();
@@ -140,6 +160,7 @@ export function useProjectSocket(projectId?: string) {
       socket.off("epic:updated", handleEpicUpdated);
       socket.off("epic:deleted", handleEpicUpdated);
       socket.off("label:created", handleLabelCreated);
+      socket.off("user:updated", handleUserUpdated);
     };
-  }, [projectId, queryClient, socket]);
+  }, [projectId, queryClient, socket, session?.id]);
 }

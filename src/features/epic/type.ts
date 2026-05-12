@@ -14,4 +14,6 @@ export type Epic = {
   updatedAt?: Date;
   taskCount: number;
   completedTasks: number;
+  milestoneId?: string | null;
+  milestone?: import("../milestone/type").Milestone;
 };

@@ -27,16 +27,15 @@ export default function EditTaskDialog() {
 
   const defaultValues = {
     title: task.title ?? "",
-    labelId: task.taskLabel?.[0]?.labelId ?? undefined,
-    labelName: task.taskLabel?.[0]?.label.name ?? undefined,
+    labelId: task.labelId ?? undefined,
+    labelName: task.label?.name ?? undefined,
     status: (task.status ?? initialStatus) as z.infer<typeof StatusTypes>,
     priority: (task.priority ?? "MEDIUM") as z.infer<typeof PriorityTypes>,
     startDate: task.startDate ? new Date(task.startDate) : undefined,
     dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
-    assigneeId: task.taskAssignee?.[0]?.userId ?? "",
+    assigneeId: task.assigneeId ?? "",
     projectId: task.projectId ?? "",
     epicId: task.epicId ?? undefined,
-    milestoneId: task.milestoneId ?? undefined,
   };
 
   function onSubmit(values: z.infer<typeof TaskFormSchema>) {

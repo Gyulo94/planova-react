@@ -37,6 +37,7 @@ export function useFindWorkspaces() {
   const query = useQuery<Workspace[]>({
     queryKey: ["workspaces"],
     queryFn: findWorkspaces,
+    retry: false,
   });
   return query;
 }

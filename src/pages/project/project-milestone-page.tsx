@@ -14,7 +14,7 @@ import {
 
 import { useProjectSocket } from "@/features/project/use-project-socket";
 import { useSetTitle } from "@/hooks/use-set-title";
-import { MilestoneCard } from "@/features/milestone/components/milestone-card";
+import MilestoneCard from "@/features/milestone/components/milestone-card";
 
 export default function ProjectMilestonePage() {
   const { workspaceId, projectId } = useParams();
@@ -86,8 +86,8 @@ export default function ProjectMilestonePage() {
               <MilestoneCard
                 key={milestone.id}
                 milestone={milestone}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
               />
             ))}
           </div>
