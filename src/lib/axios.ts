@@ -85,7 +85,7 @@ api.interceptors.response.use(
 
     try {
       if (!refreshPromise) {
-        refreshPromise = api
+        refreshPromise = publicApi
           .post("/auth/refresh")
           .then(() => undefined)
           .finally(() => {
